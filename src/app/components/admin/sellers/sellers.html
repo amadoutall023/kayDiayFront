@@ -1,0 +1,127 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="fas fa-users me-2"></i>Liste des vendeurs</h3>
+        <button class="btn btn-primary" (click)="loadSellers()">
+          <i class="fas fa-sync me-2"></i>Actualiser
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Rechercher par nom ou email..."
+              [(ngModel)]="searchQuery"
+              (input)="onSearchChange()">
+            <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Alert -->
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+
+      <!-- Sellers Table -->
+      <div *ngIf="!loading && !error" class="card">
+        <div class="card-body">
+          <div *ngIf="filteredSellers.length === 0 && sellers.length > 0" class="text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h5>Aucun vendeur trouvé</h5>
+            <p class="text-muted">Aucun vendeur ne correspond à votre recherche.</p>
+            <button class="btn btn-secondary" (click)="clearSearch()">Effacer la recherche</button>
+          </div>
+
+          <div *ngIf="sellers.length === 0" class="text-center py-5">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <h5>Aucun vendeur trouvé</h5>
+            <p class="text-muted">Il n'y a pas encore de vendeurs approuvés.</p>
+          </div>
+
+          <div *ngIf="filteredSellers.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Vendeur</th>
+                  <th>Email</th>
+                  <th>Rôle</th>
+                  <th>Statut</th>
+                  <th>Annonces</th>
+                  <th>Date d'inscription</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let seller of filteredSellers">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle me-3">
+                        <i class="fas fa-user"></i>
+                      </div>
+                      <div>
+                        <div class="fw-bold">{{ seller.name }}</div>
+                        <small class="text-muted">ID: {{ seller.id }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ seller.email }}</td>
+                  <td>
+                    <span class="badge bg-primary">{{ getRoleText(seller.role) }}</span>
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(seller.status)">
+                      {{ getStatusText(seller.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge bg-info">{{ seller._count?.ads || 0 }}</span>
+                  </td>
+                  <td>{{ seller.createdAt | date:'dd/MM/yyyy' }}</td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <button
+                        *ngIf="seller.status === 'active'"
+                        class="btn btn-warning btn-sm"
+                        (click)="suspendSeller(seller.id)"
+                        title="Suspendre">
+                        <i class="fas fa-ban"></i>
+                      </button>
+                      <button
+                        *ngIf="seller.status === 'suspended'"
+                        class="btn btn-success btn-sm"
+                        (click)="activateSeller(seller.id)"
+                        title="Réactiver">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button
+                        class="btn btn-danger btn-sm"
+                        (click)="deleteSeller(seller.id)"
+                        title="Supprimer">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

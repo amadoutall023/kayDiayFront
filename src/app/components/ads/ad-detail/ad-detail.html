@@ -1,0 +1,136 @@
+<div class="container my-4">
+  <!-- Loading -->
+  <div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Ad Detail -->
+  <div *ngIf="!loading && !error && ad" class="row">
+    <!-- Images Section -->
+    <div class="col-lg-8 mb-4">
+      <div class="card">
+        <div class="card-body p-0">
+          <!-- Main Image -->
+          <div class="position-relative" style="height: 400px; overflow: hidden;">
+            <img
+              *ngIf="ad.images && ad.images.length > 0"
+              [src]="ad.images[currentImageIndex]"
+              [alt]="ad.title"
+              class="w-100 h-100 object-fit-cover">
+
+            <!-- Navigation Arrows -->
+            <button
+              *ngIf="ad.images && ad.images.length > 1"
+              class="btn btn-light position-absolute top-50 start-0 translate-middle-y ms-2"
+              (click)="prevImage()"
+              style="z-index: 10;">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+              *ngIf="ad.images && ad.images.length > 1"
+              class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-2"
+              (click)="nextImage()"
+              style="z-index: 10;">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Thumbnail Images -->
+          <div *ngIf="ad.images && ad.images.length > 1" class="p-3 border-top">
+            <div class="d-flex gap-2 overflow-auto">
+              <img
+                *ngFor="let image of ad.images; let i = index"
+                [src]="image"
+                [alt]="'Image ' + (i + 1)"
+                class="img-thumbnail"
+                style="width: 80px; height: 80px; object-fit: cover; cursor: pointer; flex-shrink: 0;"
+                [class.border-primary]="i === currentImageIndex"
+                (click)="setCurrentImage(i)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">{{ ad.title }}</h4>
+        </div>
+        <div class="card-body">
+          <!-- Price -->
+          <div class="mb-3">
+            <h3 class="text-primary mb-0">{{ formatPrice(ad.price) }}</h3>
+          </div>
+
+          <!-- Status -->
+          <div class="mb-3">
+            <span class="badge" [ngClass]="getStatusBadgeClass(ad.status)">
+              {{ getStatusText(ad.status) }}
+            </span>
+          </div>
+
+          <!-- Category -->
+          <div class="mb-3">
+            <small class="text-muted d-block">Catégorie</small>
+            <span class="badge bg-secondary">{{ ad.category.name }}</span>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <h6>Description</h6>
+            <p class="mb-0">{{ ad.description }}</p>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="mb-3">
+            <h6>Informations de contact</h6>
+            <div class="d-flex flex-column gap-2">
+              <div *ngIf="ad.phone">
+                <i class="fas fa-phone me-2 text-muted"></i>
+                <a [href]="'tel:' + ad.phone" class="text-decoration-none">{{ ad.phone }}</a>
+              </div>
+              <div *ngIf="ad.address">
+                <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+                {{ ad.address }}
+              </div>
+              <div>
+                <i class="fas fa-user me-2 text-muted"></i>
+                {{ ad.user.name }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates -->
+          <div class="mb-3">
+            <small class="text-muted d-block">
+              <i class="fas fa-calendar me-1"></i>
+              Publié le {{ ad.createdAt | date:'dd/MM/yyyy' }}
+            </small>
+            <small class="text-muted d-block" *ngIf="ad.publishedAt">
+              <i class="fas fa-clock me-1"></i>
+              Activé le {{ ad.publishedAt | date:'dd/MM/yyyy' }}
+            </small>
+            <small class="text-muted d-block" *ngIf="ad.expiresAt">
+              <i class="fas fa-hourglass-end me-1"></i>
+              Expire le {{ ad.expiresAt | date:'dd/MM/yyyy' }}
+            </small>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-secondary w-100" (click)="goBack()">
+            <i class="fas fa-arrow-left me-2"></i>Retour
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

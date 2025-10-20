@@ -1,0 +1,92 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="fas fa-user-plus me-2"></i>Demandes d'inscription vendeur</h3>
+        <button class="btn btn-primary" (click)="loadRequests()">
+          <i class="fas fa-sync me-2"></i>Actualiser
+        </button>
+      </div>
+
+      <!-- Error Alert -->
+      <div *ngIf="error" class="alert alert-danger">
+        {{ error }}
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
+        </div>
+      </div>
+
+      <!-- Requests Table -->
+      <div *ngIf="!loading && !error" class="card">
+        <div class="card-body">
+          <div *ngIf="requests.length === 0" class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <h5>Aucune demande en attente</h5>
+            <p class="text-muted">Toutes les demandes ont été traitées.</p>
+          </div>
+
+          <div *ngIf="requests.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Utilisateur</th>
+                  <th>Email</th>
+                  <th>Date de demande</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let request of requests">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-circle me-3">
+                        <i class="fas fa-user"></i>
+                      </div>
+                      <div>
+                        <div class="fw-bold">{{ request.user.name }}</div>
+                        <small class="text-muted">ID: {{ request.user.id }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ request.user.email }}</td>
+                  <td>{{ request.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusBadgeClass(request.status)">
+                      {{ getStatusText(request.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group" *ngIf="request.status === 'pending'">
+                      <button
+                        class="btn btn-success btn-sm"
+                        (click)="approveRequest(request.id)"
+                        title="Approuver">
+                        <i class="fas fa-check"></i>
+                      </button>
+                      <button
+                        class="btn btn-danger btn-sm"
+                        (click)="rejectRequest(request.id)"
+                        title="Rejeter">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                    <span *ngIf="request.status !== 'pending'" class="text-muted">
+                      <i class="fas fa-check-circle text-success" *ngIf="request.status === 'approved'"></i>
+                      <i class="fas fa-times-circle text-danger" *ngIf="request.status === 'rejected'"></i>
+                      Traité
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

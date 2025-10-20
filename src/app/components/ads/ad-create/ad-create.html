@@ -1,0 +1,199 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fas fa-{{ isEditMode ? 'edit' : 'plus' }} me-2"></i>{{ isEditMode ? 'Modifier' : 'Créer' }} une annonce</h3>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="adForm" (ngSubmit)="onSubmit()">
+          <!-- Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Titre *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="title"
+              formControlName="title"
+              placeholder="Entrez le titre de votre annonce"
+              [class.is-invalid]="title?.invalid && title?.touched">
+            <div class="invalid-feedback" *ngIf="title?.invalid && title?.touched">
+              <div *ngIf="title?.errors?.['required']">Le titre est requis</div>
+              <div *ngIf="title?.errors?.['minlength']">Le titre doit contenir au moins 3 caractères</div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label for="description" class="form-label">Description *</label>
+            <textarea
+              class="form-control"
+              id="description"
+              formControlName="description"
+              rows="4"
+              placeholder="Décrivez votre annonce en détail"
+              [class.is-invalid]="description?.invalid && description?.touched"></textarea>
+            <div class="invalid-feedback" *ngIf="description?.invalid && description?.touched">
+              <div *ngIf="description?.errors?.['required']">La description est requise</div>
+              <div *ngIf="description?.errors?.['minlength']">La description doit contenir au moins 10 caractères</div>
+            </div>
+          </div>
+
+          <!-- Phone and Address -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="phone" class="form-label">Téléphone</label>
+              <input
+                type="tel"
+                class="form-control"
+                id="phone"
+                formControlName="phone"
+                placeholder="77 123 45 67"
+                [class.is-invalid]="phone?.invalid && phone?.touched">
+              <div class="invalid-feedback" *ngIf="phone?.invalid && phone?.touched">
+                <div *ngIf="phone?.errors?.['minlength']">Le numéro doit contenir au moins 7 caractères</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="address" class="form-label">Adresse</label>
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                formControlName="address"
+                placeholder="Dakar, Plateau"
+                [class.is-invalid]="address?.invalid && address?.touched">
+              <div class="invalid-feedback" *ngIf="address?.invalid && address?.touched">
+                <div *ngIf="address?.errors?.['minlength']">L'adresse doit contenir au moins 5 caractères</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Price and Category -->
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="price" class="form-label">Prix (FCFA) *</label>
+              <input
+                type="number"
+                class="form-control"
+                id="price"
+                formControlName="price"
+                placeholder="0"
+                min="0"
+                [class.is-invalid]="price?.invalid && price?.touched">
+              <div class="invalid-feedback" *ngIf="price?.invalid && price?.touched">
+                <div *ngIf="price?.errors?.['required']">Le prix est requis</div>
+                <div *ngIf="price?.errors?.['min']">Le prix doit être positif</div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="categoryId" class="form-label">Catégorie *</label>
+              <select
+                class="form-select"
+                id="categoryId"
+                formControlName="categoryId"
+                [class.is-invalid]="categoryId?.invalid && categoryId?.touched">
+                <option value="">Sélectionnez une catégorie</option>
+                <option *ngFor="let category of categories" [value]="category.id">
+                  {{ category.name }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="categoryId?.invalid && categoryId?.touched">
+                La catégorie est requise
+              </div>
+            </div>
+          </div>
+
+          <!-- Camera Capture -->
+          <div class="mb-3">
+            <label class="form-label">Photos (obligatoire - maximum {{ maxImages }})</label>
+
+            <!-- Camera Button -->
+            <div class="mb-3">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="startCamera()"
+                [disabled]="isCapturing || capturedImages.length >= maxImages">
+                <i class="fas fa-camera me-2"></i>
+                Prendre une photo ({{ capturedImages.length }}/{{ maxImages }})
+              </button>
+            </div>
+
+            <!-- Camera Interface -->
+            <div *ngIf="isCapturing" class="mb-3">
+              <div class="card">
+                <div class="card-body text-center">
+                  <video #videoElement class="img-fluid mb-3" autoplay playsinline style="max-width: 100%; max-height: 300px;"></video>
+                  <div class="d-flex gap-2 justify-content-center">
+                    <button
+                      type="button"
+                      class="btn btn-success"
+                      (click)="captureImage()">
+                      <i class="fas fa-camera me-2"></i>Capturer
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      (click)="stopCamera()">
+                      <i class="fas fa-times me-2"></i>Annuler
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Captured Images Preview -->
+            <div *ngIf="capturedImages.length > 0" class="mt-3">
+              <h6>Photos capturées:</h6>
+              <div class="row">
+                <div *ngFor="let image of capturedImages; let i = index" class="col-md-3 mb-3">
+                  <div class="position-relative">
+                    <img [src]="image" alt="Photo {{ i + 1 }}" class="img-thumbnail w-100" style="height: 150px; object-fit: cover;">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                      (click)="removeCapturedImage(i)">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Validation Message -->
+            <div *ngIf="capturedImages.length === 0" class="text-muted">
+              <small>Au moins une photo est requise pour {{ isEditMode ? 'modifier' : 'créer' }} l'annonce</small>
+            </div>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="error" class="alert alert-danger">
+            {{ error }}
+          </div>
+
+          <!-- Success Message -->
+          <div *ngIf="success" class="alert alert-success">
+            {{ success }}
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-flex gap-2">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="loading || capturedImages.length === 0">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              {{ loading ? (isEditMode ? 'Modification...' : 'Création...') : (isEditMode ? 'Modifier l\'annonce' : 'Créer l\'annonce') }}
+            </button>
+
+            <button type="button" class="btn btn-secondary" (click)="cancel()">
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
