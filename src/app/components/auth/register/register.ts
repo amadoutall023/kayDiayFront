@@ -25,7 +25,7 @@ export class Register {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
-      role: ['user'] // Valeur par défaut : acheteur
+      role: ['seller'] // Par défaut : vendeur
     }, { validators: this.passwordMatchValidator });
   }
 

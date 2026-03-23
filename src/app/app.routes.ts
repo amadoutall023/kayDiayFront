@@ -11,6 +11,7 @@ import { CategoryList } from './components/admin/category-list/category-list';
 import { CategoryCreate } from './components/admin/category-create/category-create';
 import { SellerRequests } from './components/admin/seller-requests/seller-requests';
 import { Sellers } from './components/admin/sellers/sellers';
+import { Profile } from './components/dashboard/profile/profile';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'ads', pathMatch: 'full' },
       { path: 'ads', component: AdList },
       { path: 'ads/create', component: AdCreate },
+      { path: 'profile', component: Profile },
       { path: 'categories', component: CategoryList },
       { path: 'categories/create', component: CategoryCreate },
       { path: 'verification', component: Verification },

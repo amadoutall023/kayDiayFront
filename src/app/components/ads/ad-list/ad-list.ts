@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdsService } from '../../../services/ads';
+import { AuthService } from '../../../services/auth';
 import { Ad, Category, AdsResponse } from '../../../models/ad';
 
 @Component({
@@ -24,8 +25,9 @@ export class AdList implements OnInit {
 
   // Filters
   selectedCategoryId: number | null = null;
+  selectedStatus = 'all';
 
-  constructor(private adsService: AdsService, private router: Router) {}
+  constructor(private adsService: AdsService, private router: Router, public authService: AuthService) { }
 
   ngOnInit() {
     this.loadCategories();
@@ -47,7 +49,18 @@ export class AdList implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.adsService.getAds(this.currentPage, 10, this.selectedCategoryId || undefined).subscribe({
+    const currentUser = this.authService.getCurrentUser();
+    const isAdminView = currentUser?.role === 'admin' || currentUser?.role === 'moderator';
+    const request$ = isAdminView
+      ? this.adsService.getAds(this.currentPage, 10, this.selectedCategoryId || undefined, this.selectedStatus)
+      : this.adsService.getMyAds(
+          this.currentPage,
+          10,
+          this.selectedStatus,
+          this.selectedCategoryId || undefined
+        );
+
+    request$.subscribe({
       next: (response: AdsResponse) => {
         this.ads = response.ads;
         this.totalAds = response.pagination.total;
@@ -63,6 +76,11 @@ export class AdList implements OnInit {
   }
 
   onCategoryChange() {
+    this.currentPage = 1;
+    this.loadAds();
+  }
+
+  onStatusChange() {
     this.currentPage = 1;
     this.loadAds();
   }
@@ -110,8 +128,14 @@ export class AdList implements OnInit {
       case 'pending_verification': return 'En attente';
       case 'expired': return 'Expirée';
       case 'rejected': return 'Rejetée';
+      case 'deleted': return 'Supprimée';
       default: return status;
     }
+  }
+
+  isAdOwner(ad: Ad): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    return currentUser !== null && currentUser.id === ad.userId;
   }
 
   editAd(ad: Ad) {
@@ -134,5 +158,10 @@ export class AdList implements OnInit {
         }
       });
     }
+  }
+
+  get isAdminView(): boolean {
+    const role = this.authService.getCurrentUser()?.role;
+    return role === 'admin' || role === 'moderator';
   }
 }

@@ -13,7 +13,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromToken());
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   register(userData: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData);
@@ -71,6 +71,12 @@ export class AuthService {
     return new HttpHeaders({
       'Authorization': token ? `Bearer ${token}` : '',
       'Content-Type': 'application/json'
+    });
+  }
+
+  requestSellerRole(): Observable<any> {
+    return this.http.post<any>('http://localhost:3009/api/users/request-seller', {}, {
+      headers: this.getAuthHeaders()
     });
   }
 }

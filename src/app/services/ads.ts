@@ -13,13 +13,28 @@ export class AdsService {
   constructor(
     private http: HttpClient,
     private authService: AuthService
-  ) {}
+  ) { }
 
   getAds(page: number = 1, limit: number = 10, categoryId?: number, status: string = 'active'): Observable<AdsResponse> {
     const params: any = { page, limit, status };
     if (categoryId) params.categoryId = categoryId;
 
     return this.http.get<AdsResponse>(`${this.apiUrl}/ads`, { params });
+  }
+
+  getMyAds(page: number = 1, limit: number = 10, status?: string, categoryId?: number): Observable<AdsResponse> {
+    const params: any = { page, limit };
+    if (status) params.status = status;
+    if (categoryId) params.categoryId = categoryId;
+
+    return this.http.get<AdsResponse>(`${this.apiUrl}/ads/my-ads`, {
+      params,
+      headers: this.authService.getAuthHeaders()
+    });
+  }
+
+  getAdById(id: number): Observable<{ ad: Ad }> {
+    return this.http.get<{ ad: Ad }>(`${this.apiUrl}/ads/${id}`);
   }
 
   createAd(adData: CreateAdRequest): Observable<{ ad: Ad }> {

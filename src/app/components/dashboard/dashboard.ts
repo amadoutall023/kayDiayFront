@@ -9,7 +9,7 @@ import { Ad } from '../../models/ad';
   selector: 'app-dashboard',
   imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css'
+  styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit {
   userAdsCount = 0;
@@ -27,12 +27,20 @@ export class Dashboard implements OnInit {
   }
 
   loadUserStats() {
-    // Load user's ads to calculate stats
-    // This would typically come from a dedicated endpoint
-    // For now, we'll set some placeholder values
-    this.userAdsCount = 0;
-    this.activeAdsCount = 0;
-    this.pendingAdsCount = 0;
+    this.adsService.getMyAds(1, 100).subscribe({
+      next: (response) => {
+        const ads = response.ads;
+        this.userAdsCount = ads.length;
+        this.activeAdsCount = ads.filter((ad: Ad) => ad.status === 'active').length;
+        this.pendingAdsCount = ads.filter((ad: Ad) => ad.status === 'pending_verification').length;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des statistiques:', err);
+        this.userAdsCount = 0;
+        this.activeAdsCount = 0;
+        this.pendingAdsCount = 0;
+      }
+    });
   }
 
   getRoleBadgeClass(role?: string): string {

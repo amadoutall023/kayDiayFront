@@ -1,11 +1,11 @@
 <!-- Fixed Layout Container -->
 <div class="app-container">
   <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-md navbar-dark">
     <div class="container-fluid">
       <a class="navbar-brand" routerLink="/">
         <i class="fas fa-home me-2"></i>
-        <span class="fw-bold">photolDiay</span>
+        <span class="fw-bold">kayDiay</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -35,15 +35,48 @@
               <i class="fas fa-user-circle me-1"></i>{{ authService.getCurrentUser()?.name }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" routerLink="/dashboard/ads"><i class="fas fa-list me-2"></i>Mes annonces</a></li>
-              <li><a class="dropdown-item" routerLink="/dashboard/ads/create"><i class="fas fa-plus me-2"></i>Créer une annonce</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" href="#" (click)="logout()"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a></li>
+              <li><a class="dropdown-item" routerLink="/dashboard/ads"><i class="fas fa-list me-2"></i>Mes annonces</a>
+              </li>
+              <li><a class="dropdown-item" routerLink="/dashboard/ads/create"><i class="fas fa-plus me-2"></i>Créer une
+                  annonce</a></li>
+              <li><a class="dropdown-item" routerLink="/dashboard/profile"><i class="fas fa-user me-2"></i>Mon
+                  profil</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-danger" href="#" (click)="logout()"><i
+                    class="fas fa-sign-out-alt me-2"></i>Déconnexion</a></li>
             </ul>
           </li>
         </ul>
       </div>
     </div>
+  </nav>
+
+  <!-- Bottom Navigation for Mobile -->
+  <nav class="bottom-nav d-md-none">
+    <a routerLink="/" class="bottom-nav-item" routerLinkActive="active">
+      <i class="fas fa-home"></i>
+      <span>Accueil</span>
+    </a>
+    <a routerLink="/dashboard/ads" class="bottom-nav-item" *ngIf="authService.isAuthenticated()"
+      routerLinkActive="active">
+      <i class="fas fa-list"></i>
+      <span>Annonces</span>
+    </a>
+    <a routerLink="/dashboard/ads/create" class="bottom-nav-item" *ngIf="authService.isAuthenticated()"
+      routerLinkActive="active">
+      <i class="fas fa-plus-circle"></i>
+      <span>Publier</span>
+    </a>
+    <a *ngIf="!authService.isAuthenticated()" [routerLink]="['/login']" class="bottom-nav-item">
+      <i class="fas fa-sign-in-alt"></i>
+      <span>Connexion</span>
+    </a>
+    <a class="bottom-nav-item" *ngIf="authService.isAuthenticated()" (click)="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Déconnexion</span>
+    </a>
   </nav>
 
   <!-- Main Content -->
@@ -53,27 +86,27 @@
 </div>
 
 <!-- Footer -->
-<footer class="bg-dark text-white mt-5 py-4" *ngIf="!authService.isAuthenticated()">
+<footer class="bg-dark text-white mt-5 py-4">
   <div class="container">
     <div class="row">
       <div class="col-md-6">
-        <h5>Expat Dakar</h5>
+        <h5>kayDiay</h5>
         <p>La plateforme de référence pour les expatriés à Dakar. Achetez, vendez, échangez en toute sécurité.</p>
       </div>
       <div class="col-md-3">
         <h6>Navigation</h6>
         <ul class="list-unstyled">
-          <li><a href="#" class="text-white text-decoration-none">Accueil</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Annonces</a></li>
-          <li><a href="#" class="text-white text-decoration-none">Catégories</a></li>
+          <li><a routerLink="/" class="text-white text-decoration-none">Accueil</a></li>
+          <li><a routerLink="/dashboard/ads" class="text-white text-decoration-none">Annonces</a></li>
+          <li><a routerLink="/dashboard/ads/create" class="text-white text-decoration-none">Créer une annonce</a></li>
         </ul>
       </div>
       <div class="col-md-3">
         <h6>Contact</h6>
         <ul class="list-unstyled">
-          <li><i class="fas fa-envelope me-2"></i>contact@photolDiay.com</li>
+          <li><i class="fas fa-envelope me-2"></i>Elhadjiamadoutall85@gmail.com</li>
           <li><i class="fas fa-phone me-2"></i>+221 78 454 11 51</li>
-          <li><i class="fas fa-map-marker-alt me-2"></i>Dakar, Sénégal</li>
+          <li><i class="fas fa-map-marker-alt me-2"></i>Zac mbao, Sénégal</li>
         </ul>
       </div>
     </div>

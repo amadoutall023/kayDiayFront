@@ -27,6 +27,16 @@ export class UsersService {
     });
   }
 
+  changePassword(passwordData: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(`${this.apiUrl}/change-password`, passwordData, {
+      headers: this.authService.getAuthHeaders()
+    });
+  }
+
   getSellerRequests(): Observable<{ requests: any[] }> {
     return this.http.get<{ requests: any[] }>(`${this.apiUrl}/seller-requests`, {
       headers: this.authService.getAuthHeaders()

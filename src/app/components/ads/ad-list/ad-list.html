@@ -1,8 +1,5 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h2><i class="fas fa-list me-2"></i>Annonces</h2>
-  <a routerLink="/dashboard/ads/create" class="btn btn-primary">
-    <i class="fas fa-plus me-2"></i>Créer une annonce
-  </a>
+  <h2><i class="fas fa-list me-2"></i>{{ isAdminView ? 'Annonces' : 'Mes produits' }}</h2>
 </div>
 
 <!-- Filters -->
@@ -11,15 +8,21 @@
     <div class="row">
       <div class="col-md-4">
         <label for="categoryFilter" class="form-label">Filtrer par catégorie</label>
-        <select
-          id="categoryFilter"
-          class="form-select"
-          [(ngModel)]="selectedCategoryId"
-          (change)="onCategoryChange()">
+        <select id="categoryFilter" class="form-select" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
           <option [ngValue]="null">Toutes les catégories</option>
           <option *ngFor="let category of categories" [ngValue]="category.id">
             {{ category.name }}
           </option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label for="statusFilter" class="form-label">Filtrer par statut</label>
+        <select id="statusFilter" class="form-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+          <option value="all">Tous les statuts</option>
+          <option value="pending_verification">En attente d'approbation</option>
+          <option value="active">Actifs</option>
+          <option value="rejected">Rejetés</option>
+          <option value="expired">Expirés</option>
         </select>
       </div>
     </div>
@@ -43,12 +46,10 @@
   <div *ngFor="let ad of ads" class="col-md-6 col-lg-4 mb-4">
     <div class="card h-100 ad-card">
       <div class="card-img-top" style="height: 200px; overflow: hidden;">
-        <img
-          *ngIf="ad.images && ad.images.length > 0"
-          [src]="ad.images[0]"
-          [alt]="ad.title"
+        <img *ngIf="ad.images && ad.images.length > 0" [src]="ad.images[0]" [alt]="ad.title"
           class="w-100 h-100 object-fit-cover">
-        <div *ngIf="!ad.images || ad.images.length === 0" class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
+        <div *ngIf="!ad.images || ad.images.length === 0"
+          class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
           <i class="fas fa-image fa-3x text-muted"></i>
         </div>
       </div>
@@ -79,7 +80,7 @@
           </small>
 
           <!-- Action Buttons -->
-          <div class="d-flex gap-1 mt-2">
+          <div class="d-flex gap-1 mt-2" *ngIf="isAdOwner(ad)">
             <button class="btn btn-outline-primary btn-sm flex-fill" (click)="editAd(ad)">
               <i class="fas fa-edit me-1"></i>Modifier
             </button>
@@ -87,6 +88,7 @@
               <i class="fas fa-trash me-1"></i>Supprimer
             </button>
           </div>
+
         </div>
       </div>
     </div>
@@ -97,7 +99,9 @@
 <div *ngIf="!loading && !error && ads.length === 0" class="text-center my-5">
   <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
   <h4>Aucune annonce trouvée</h4>
-  <p class="text-muted">Il n'y a pas encore d'annonces dans cette catégorie.</p>
+  <p class="text-muted">
+    {{ isAdminView ? "Il n'y a pas encore d'annonces pour ce filtre." : "Vous n'avez encore aucun produit pour ce filtre." }}
+  </p>
 </div>
 
 <!-- Pagination -->

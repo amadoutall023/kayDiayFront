@@ -60,17 +60,10 @@ export class AdCreate implements OnInit {
   }
 
   loadAdForEdit(adId: string) {
-    // For now, get all ads and find the specific one
-    // In a real app, you'd have a getAdById method
-    this.adsService.getAds(1, 100).subscribe({
+    this.adsService.getAdById(parseInt(adId)).subscribe({
       next: (response) => {
-        const ad = response.ads.find(a => a.id === parseInt(adId));
-        if (ad) {
-          this.editingAd = ad;
-          this.populateForm(ad);
-        } else {
-          this.error = 'Annonce non trouvée';
-        }
+        this.editingAd = response.ad;
+        this.populateForm(response.ad);
       },
       error: (err) => {
         this.error = 'Erreur lors du chargement de l\'annonce';

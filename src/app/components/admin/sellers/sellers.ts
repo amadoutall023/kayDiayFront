@@ -120,10 +120,10 @@ export class Sellers implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'active': return 'badge bg-success';
-      case 'pending_verification': return 'badge bg-warning';
-      case 'suspended': return 'badge bg-danger';
-      default: return 'badge bg-secondary';
+      case 'active': return 'bg-success';
+      case 'pending_verification': return 'bg-warning';
+      case 'suspended': return 'bg-danger';
+      default: return 'bg-secondary';
     }
   }
 
@@ -133,6 +133,15 @@ export class Sellers implements OnInit {
       case 'pending_verification': return 'En attente';
       case 'suspended': return 'Suspendu';
       default: return status;
+    }
+  }
+
+  getRoleBadgeClass(role: string): string {
+    switch (role) {
+      case 'seller': return 'badge bg-primary';
+      case 'admin': return 'badge bg-danger';
+      case 'moderator': return 'badge bg-warning';
+      default: return 'badge bg-secondary';
     }
   }
 

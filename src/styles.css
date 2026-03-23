@@ -329,6 +329,70 @@ body {
   box-shadow: 0 2px 10px rgba(52, 79, 31, 0.2);
 }
 
+/* Navbar responsive styles */
+.navbar-toggler {
+  border: 2px solid var(--cream);
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  background-color: var(--orange);
+  border-color: var(--orange);
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(244, 153, 26, 0.5);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28242, 234, 211, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Mobile navbar menu */
+@media (max-width: 767px) {
+  .navbar-collapse {
+    background-color: var(--primary-green);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .navbar-nav .nav-link {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+  }
+
+  .navbar-nav .nav-link:hover {
+    background-color: rgba(244, 153, 26, 0.2);
+  }
+
+  .navbar-nav .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .dropdown-menu {
+    background-color: var(--cream);
+    border: 2px solid var(--orange);
+    border-radius: 10px;
+    margin-top: 5px;
+  }
+
+  .dropdown-item {
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: var(--primary-green);
+  }
+
+  .dropdown-item:hover {
+    background-color: rgba(244, 153, 26, 0.2);
+    color: var(--orange);
+  }
+}
+
 .navbar-brand {
   font-weight: bold;
   color: var(--orange) !important;
@@ -467,7 +531,7 @@ body {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-section p {
@@ -505,31 +569,9 @@ body {
   color: var(--orange);
 }
 
+/* dashboard-header kept for legacy, overridden by db-* classes in dashboard.css */
 .dashboard-header {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
-  color: var(--cream);
-  padding: 20px 2;
-  margin-bottom: 20px;
-  border-radius: 0px;
-  box-shadow: 0 8px 25px rgba(52, 79, 31, 0.3);
-}
-
-.dashboard-header h2 {
-  margin: 0;
-  font-weight: 700;
-  font-size: 2.2rem;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-.dashboard-header p {
-  font-size: 1.1rem;
-  margin-top: 8px;
-  opacity: 0.9;
-}
-
-.dashboard-header .badge {
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  border: 2px solid rgba(255,255,255,0.3);
+  display: none;
 }
 
 .dashboard-card {
@@ -573,6 +615,7 @@ body {
 
 /* Responsive Design - Mobile First */
 @media (max-width: 576px) {
+
   /* Mobile - Extra small devices */
   .hero-section {
     padding: 30px 0;
@@ -620,6 +663,7 @@ body {
 }
 
 @media (max-width: 768px) and (min-width: 577px) {
+
   /* Tablet - Small to medium devices */
   .hero-section h1 {
     font-size: 2.2rem;
@@ -639,6 +683,7 @@ body {
 }
 
 @media (max-width: 992px) and (min-width: 769px) {
+
   /* Tablet landscape - Large tablets */
   .hero-section h1 {
     font-size: 2.5rem;
@@ -654,6 +699,7 @@ body {
 }
 
 @media (max-width: 1200px) and (min-width: 993px) {
+
   /* Desktop - Small desktops */
   .hero-section h1 {
     font-size: 2.8rem;
@@ -665,7 +711,8 @@ body {
 }
 
 /* Fixed Layout - Prevent layout shifts */
-html, body {
+html,
+body {
   height: 100%;
   overflow-x: hidden;
 }
@@ -689,12 +736,79 @@ html, body {
   right: 0;
   height: 70px;
   z-index: 1030;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Adjust main content for fixed navbar */
 .main-content {
   padding-top: 70px;
+  padding-bottom: 80px;
+}
+
+/* Bottom Navigation for Mobile */
+.bottom-nav {
+  display: none;
+}
+
+/* Mobile bottom navigation */
+@media (max-width: 767px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--primary-green);
+    padding: 8px 5px;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--cream);
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    min-width: 55px;
+  }
+
+  .bottom-nav-item i {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+  }
+
+  .bottom-nav-item span {
+    font-size: 0.65rem;
+    font-weight: 500;
+  }
+
+  .bottom-nav-item:hover,
+  .bottom-nav-item.active {
+    color: var(--orange);
+    background-color: rgba(244, 153, 26, 0.15);
+  }
+
+  /* Hide regular navbar on mobile */
+  .navbar {
+    padding: 10px 0;
+  }
+
+  /* Adjust main content padding for bottom nav */
+  .main-content {
+    padding-bottom: 70px;
+  }
+
+  /* Hide footer navigation links on mobile */
+  footer .col-md-3:first-of-type {
+    display: block;
+  }
 }
 
 /* Dashboard adjustments for fixed navbar */
@@ -733,7 +847,8 @@ html, body {
 }
 
 /* Fixed card heights */
-.category-card, .ad-card {
+.category-card,
+.ad-card {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -823,7 +938,11 @@ html, body {
     --bs-gutter-x: 0;
   }
 
-  .col-md-3, .col-md-6, .col-md-8, .col-md-9, .col-lg-6 {
+  .col-md-3,
+  .col-md-6,
+  .col-md-8,
+  .col-md-9,
+  .col-lg-6 {
     margin-bottom: 20px;
   }
 
@@ -837,9 +956,32 @@ html, body {
     flex: 0 0 50%;
     max-width: 50%;
   }
+
+  /* Mobile ad cards - 2 per row */
+  .ad-card .card-img-top {
+    height: 120px;
+  }
+
+  .ad-card .card-body {
+    padding: 12px;
+  }
+
+  .ad-card .card-title {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+
+  .ad-card .card-text {
+    font-size: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 @media (max-width: 480px) {
+
   /* Extra small mobile */
   .ad-list .col-lg-3,
   .category-grid .col-md-3 {
@@ -863,6 +1005,7 @@ html, body {
 
 /* Touch-friendly interactions */
 @media (hover: none) and (pointer: coarse) {
+
   /* Mobile touch devices */
   .card:hover {
     transform: none;
@@ -894,7 +1037,8 @@ html, body {
 }
 
 /* High DPI displays */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   .hero-section h1 {
     font-weight: 800;
     -webkit-font-smoothing: antialiased;
@@ -908,6 +1052,7 @@ html, body {
 
 /* Print styles */
 @media print {
+
   .navbar,
   .btn,
   .dashboard-header {

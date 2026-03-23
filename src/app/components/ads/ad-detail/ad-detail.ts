@@ -97,6 +97,22 @@ export class AdDetail implements OnInit {
     }).format(price);
   }
 
+  contactOnWhatsApp() {
+    if (!this.ad?.phone) {
+      alert('Ce vendeur n\'a pas renseigné de numéro WhatsApp.');
+      return;
+    }
+
+    const sanitizedPhone = this.ad.phone.replace(/\D/g, '');
+    if (!sanitizedPhone) {
+      alert('Le numéro du vendeur est invalide.');
+      return;
+    }
+
+    const message = encodeURIComponent(`Bonjour, je suis intéressé(e) par votre produit "${this.ad.title}". Est-il toujours disponible ?`);
+    window.open(`https://wa.me/${sanitizedPhone}?text=${message}`, '_blank');
+  }
+
   goBack() {
     this.router.navigate(['/']);
   }

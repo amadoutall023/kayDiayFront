@@ -81,7 +81,7 @@
                   </td>
                   <td>{{ seller.email }}</td>
                   <td>
-                    <span class="badge bg-primary">{{ getRoleText(seller.role) }}</span>
+                    <span class="badge" [ngClass]="getRoleBadgeClass(seller.role)">{{ getRoleText(seller.role) }}</span>
                   </td>
                   <td>
                     <span class="badge" [ngClass]="getStatusBadgeClass(seller.status)">
@@ -89,7 +89,7 @@
                     </span>
                   </td>
                   <td>
-                    <span class="badge bg-info">{{ seller._count?.ads || 0 }}</span>
+                    <span class="badge bg-warning">{{ seller._count?.ads || 0 }}</span>
                   </td>
                   <td>{{ seller.createdAt | date:'dd/MM/yyyy' }}</td>
                   <td>

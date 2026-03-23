@@ -126,6 +126,9 @@
           </div>
         </div>
         <div class="card-footer">
+          <button class="btn btn-success w-100 mb-2" (click)="contactOnWhatsApp()" *ngIf="ad.phone">
+            <i class="fab fa-whatsapp me-2"></i>Contacter sur WhatsApp
+          </button>
           <button class="btn btn-secondary w-100" (click)="goBack()">
             <i class="fas fa-arrow-left me-2"></i>Retour
           </button>

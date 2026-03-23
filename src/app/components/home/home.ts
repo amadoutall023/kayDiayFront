@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdsService } from '../../services/ads';
@@ -8,7 +8,7 @@ import { Ad, Category, AdsResponse } from '../../models/ad';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TitleCasePipe, DatePipe],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -27,7 +27,7 @@ export class Home implements OnInit {
     private adsService: AdsService,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadCategories();
@@ -67,7 +67,20 @@ export class Home implements OnInit {
   }
 
   onCategoryClick(categoryId: number) {
-    this.router.navigate(['/dashboard/ads'], { queryParams: { categoryId } });
+    this.selectedCategoryId = categoryId;
+    this.loadAds();
+    // Mettre à jour le select dropdown
+    setTimeout(() => {
+      const select = document.querySelector('.form-select') as HTMLSelectElement;
+      if (select) {
+        select.value = categoryId.toString();
+      }
+    }, 100);
+    // Scroll vers les annonces
+    const adsSection = document.querySelector('.bg-light');
+    if (adsSection) {
+      adsSection.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   onSearchChange() {
@@ -116,10 +129,12 @@ export class Home implements OnInit {
   }
 
   goToLogin() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.router.navigate(['/login']);
   }
 
   goToDashboard() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.router.navigate(['/dashboard']);
   }
 
@@ -149,5 +164,23 @@ export class Home implements OnInit {
 
   setCurrentImage(index: number) {
     this.currentImageIndex = index;
+  }
+
+  contactSellerOnWhatsApp() {
+    if (!this.selectedAd?.phone) {
+      alert('Ce vendeur n\'a pas renseigné de numéro WhatsApp.');
+      return;
+    }
+
+    const sanitizedPhone = this.selectedAd.phone.replace(/\D/g, '');
+    if (!sanitizedPhone) {
+      alert('Le numéro du vendeur est invalide.');
+      return;
+    }
+
+    const message = encodeURIComponent(
+      `Bonjour, je suis intéressé(e) par votre produit "${this.selectedAd.title}". Est-il toujours disponible ?`
+    );
+    window.open(`https://wa.me/${sanitizedPhone}?text=${message}`, '_blank');
   }
 }
