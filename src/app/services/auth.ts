@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '../models/user';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3009/api/auth';
+  private apiUrl = `${API_BASE_URL}/auth`;
   private tokenKey = 'auth_token';
   private currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromToken());
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -75,7 +76,7 @@ export class AuthService {
   }
 
   requestSellerRole(): Observable<any> {
-    return this.http.post<any>('http://localhost:3009/api/users/request-seller', {}, {
+    return this.http.post<any>(`${API_BASE_URL}/users/request-seller`, {}, {
       headers: this.getAuthHeaders()
     });
   }

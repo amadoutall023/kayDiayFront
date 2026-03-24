@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { AuthService } from './auth';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = 'http://localhost:3009/api/users';
+  private apiUrl = `${API_BASE_URL}/users`;
 
   constructor(
     private http: HttpClient,

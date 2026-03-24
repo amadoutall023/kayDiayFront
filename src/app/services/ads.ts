@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ad, CreateAdRequest, AdsResponse, ExtendAdRequest, Category } from '../models/ad';
 import { AuthService } from './auth';
+import { API_BASE_URL } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdsService {
-  private apiUrl = 'http://localhost:3009/api';
+  private apiUrl = API_BASE_URL;
 
   constructor(
     private http: HttpClient,

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
 import { Ad } from '../../models/ad';
+import { API_BASE_URL } from '../../api.config';
 
 @Component({
   selector: 'app-verification',
@@ -28,7 +29,7 @@ export class Verification implements OnInit {
     this.loading = true;
     this.error = '';
 
-    this.http.get<{ ads: Ad[] }>('http://localhost:3009/api/verification/pending', {
+    this.http.get<{ ads: Ad[] }>(`${API_BASE_URL}/verification/pending`, {
       headers: this.authService.getAuthHeaders()
     }).subscribe({
       next: (response) => {
@@ -44,7 +45,7 @@ export class Verification implements OnInit {
   }
 
   approveAd(adId: number) {
-    this.http.put(`http://localhost:3009/api/verification/${adId}/approve`, {}, {
+    this.http.put(`${API_BASE_URL}/verification/${adId}/approve`, {}, {
       headers: this.authService.getAuthHeaders()
     }).subscribe({
       next: () => {
@@ -61,7 +62,7 @@ export class Verification implements OnInit {
     const reason = prompt('Raison du rejet (optionnel):');
     const body = reason ? { reason } : {};
 
-    this.http.put(`http://localhost:3009/api/verification/${adId}/reject`, body, {
+    this.http.put(`${API_BASE_URL}/verification/${adId}/reject`, body, {
       headers: this.authService.getAuthHeaders()
     }).subscribe({
       next: () => {
