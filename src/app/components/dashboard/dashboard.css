@@ -410,6 +410,49 @@
 }
 
 /* =========================================================
+   MOBILE QUICK MENU
+   ========================================================= */
+.db-mobile-menu {
+  display: none;
+  padding: 12px 16px 0;
+  background: #f4f6f3;
+}
+
+.db-mobile-menu-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: none;
+}
+
+.db-mobile-menu-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.db-mobile-menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #dfe5dc;
+  background: #fff;
+  color: var(--primary-green);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(52, 79, 31, 0.06);
+}
+
+.db-mobile-menu-link--active {
+  background: rgba(244, 153, 26, 0.12);
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+/* =========================================================
    RESPONSIVE
    ========================================================= */
 @media (max-width: 768px) {
@@ -424,6 +467,10 @@
   .db-topbar {
     padding: 14px 16px;
     top: 70px;
+  }
+
+  .db-mobile-menu {
+    display: block;
   }
 
   .db-content {

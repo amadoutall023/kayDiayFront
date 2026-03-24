@@ -147,6 +147,41 @@
       </div>
     </header>
 
+    <div class="db-mobile-menu d-md-none">
+      <div class="db-mobile-menu-scroll">
+        <a routerLink="/dashboard/ads" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <i class="fas fa-list-ul"></i>
+          <span>Mes annonces</span>
+        </a>
+        <a routerLink="/dashboard/ads/create" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <i class="fas fa-plus-circle"></i>
+          <span>Créer</span>
+        </a>
+        <a routerLink="/dashboard/profile" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <i class="fas fa-user-circle"></i>
+          <span>Profil</span>
+        </a>
+        @if (authService.getCurrentUser()?.role === 'admin') {
+          <a routerLink="/dashboard/categories" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+            <i class="fas fa-tags"></i>
+            <span>Catégories</span>
+          </a>
+          <a routerLink="/dashboard/verification" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+            <i class="fas fa-check-circle"></i>
+            <span>Vérification</span>
+          </a>
+          <a routerLink="/dashboard/seller-requests" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+            <i class="fas fa-user-clock"></i>
+            <span>Demandes</span>
+          </a>
+          <a routerLink="/dashboard/sellers" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+            <i class="fas fa-users"></i>
+            <span>Vendeurs</span>
+          </a>
+        }
+      </div>
+    </div>
+
     <!-- Page content -->
     <div class="db-content">
       <router-outlet></router-outlet>

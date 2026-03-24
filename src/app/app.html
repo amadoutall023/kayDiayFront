@@ -18,6 +18,18 @@
           <li class="nav-item" *ngIf="authService.isAuthenticated()">
             <a class="nav-link" routerLink="/dashboard/ads" routerLinkActive="active">Mes annonces </a>
           </li>
+          <li class="nav-item" *ngIf="authService.getCurrentUser()?.role === 'admin'">
+            <a class="nav-link" routerLink="/dashboard/categories" routerLinkActive="active">Catégories</a>
+          </li>
+          <li class="nav-item" *ngIf="authService.getCurrentUser()?.role === 'admin'">
+            <a class="nav-link" routerLink="/dashboard/verification" routerLinkActive="active">Vérification</a>
+          </li>
+          <li class="nav-item" *ngIf="authService.getCurrentUser()?.role === 'admin'">
+            <a class="nav-link" routerLink="/dashboard/seller-requests" routerLinkActive="active">Demandes vendeurs</a>
+          </li>
+          <li class="nav-item" *ngIf="authService.getCurrentUser()?.role === 'admin'">
+            <a class="nav-link" routerLink="/dashboard/sellers" routerLinkActive="active">Liste vendeurs</a>
+          </li>
         </ul>
         <ul class="navbar-nav">
           <li class="nav-item" *ngIf="!authService.isAuthenticated()">
@@ -41,6 +53,10 @@
                   annonce</a></li>
               <li><a class="dropdown-item" routerLink="/dashboard/profile"><i class="fas fa-user me-2"></i>Mon
                   profil</a></li>
+              <li *ngIf="authService.getCurrentUser()?.role === 'admin'"><a class="dropdown-item" routerLink="/dashboard/categories"><i class="fas fa-tags me-2"></i>Catégories</a></li>
+              <li *ngIf="authService.getCurrentUser()?.role === 'admin'"><a class="dropdown-item" routerLink="/dashboard/verification"><i class="fas fa-check-circle me-2"></i>Vérification</a></li>
+              <li *ngIf="authService.getCurrentUser()?.role === 'admin'"><a class="dropdown-item" routerLink="/dashboard/seller-requests"><i class="fas fa-user-clock me-2"></i>Demandes vendeurs</a></li>
+              <li *ngIf="authService.getCurrentUser()?.role === 'admin'"><a class="dropdown-item" routerLink="/dashboard/sellers"><i class="fas fa-users me-2"></i>Liste vendeurs</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
