@@ -188,22 +188,97 @@
 @if (categories.length > 0) {
   <section class="py-5 bg-white">
     <div class="container">
-      <div class="text-center mb-5">
-        <h2 class="section-title">Explorer par catégories</h2>
-        <p class="text-muted">Trouvez exactement ce que vous cherchez</p>
+      <div class="d-flex justify-content-between align-items-start align-items-md-center mb-4 flex-column flex-md-row gap-2">
+        <div>
+          <h2 class="section-title mb-1">Explorer par catégories</h2>
+          <p class="text-muted mb-0 small">Trouvez exactement ce que vous cherchez</p>
+        </div>
       </div>
-      <div class="row g-3">
-        @for (category of categories; track category.id) {
-          <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-            <div class="home-category-card" (click)="onCategoryClick(category.id)">
-              <div class="home-category-icon mx-auto mb-2">
-                <i class="fas fa-tag"></i>
-              </div>
-              <p class="home-category-name mb-0">{{ category.name | titlecase }}</p>
+      <div class="row justify-content-center mb-4">
+        <div class="col-12 col-md-8 col-lg-6">
+          <select
+            class="form-select home-category-select"
+            [(ngModel)]="selectedCategoryId"
+            (change)="onExploreCategoryChange()">
+            <option [ngValue]="null">Choisir une catégorie</option>
+            @for (category of categories; track category.id) {
+              <option [ngValue]="category.id">{{ category.name | titlecase }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      @if (selectedCategory) {
+        <div id="category-products" class="mt-5">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row gap-2">
+            <div>
+              <h3 class="section-title mb-1">{{ selectedCategory.name | titlecase }}</h3>
+              <p class="text-muted mb-0 small">Produits disponibles dans cette categorie</p>
             </div>
+            <button class="btn btn-outline-primary btn-sm" (click)="selectedCategory = null; categoryAds = []; selectedCategoryId = null; loadAds()">
+              Voir tout
+            </button>
           </div>
-        }
-      </div>
+
+          @if (categoryLoading) {
+            <div class="text-center py-4">
+              <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Chargement...</span>
+              </div>
+              <p class="text-muted mb-0">Chargement des produits...</p>
+            </div>
+          }
+
+          @if (categoryError) {
+            <div class="alert alert-danger" role="alert">
+              {{ categoryError }}
+            </div>
+          }
+
+          @if (!categoryLoading && !categoryError && categoryAds.length > 0) {
+            <div class="row g-3 g-md-4">
+              @for (ad of categoryAds; track ad.id) {
+                <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                  <div class="card h-100 home-ad-card" (click)="openAdModal(ad)">
+                    <div class="home-ad-img-wrap">
+                      @if (ad.images && ad.images.length > 0) {
+                        <img [src]="ad.images[0]" [alt]="ad.title" class="home-ad-img">
+                      } @else {
+                        <div class="home-ad-img-placeholder">
+                          <i class="fas fa-image fa-2x"></i>
+                        </div>
+                      }
+                      <span class="home-ad-price-badge">{{ formatPrice(ad.price) }}</span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column p-3">
+                      <span class="category-badge align-self-start mb-2">{{ ad.category.name }}</span>
+                      <h6 class="card-title mb-1 home-ad-title">{{ ad.title }}</h6>
+                      <p class="card-text text-muted small mb-2 home-ad-desc">{{ ad.description }}</p>
+                      <div class="mt-auto d-flex justify-content-between align-items-center">
+                        @if (ad.address) {
+                          <small class="text-muted text-truncate home-ad-address">
+                            <i class="fas fa-map-marker-alt me-1"></i>{{ ad.address }}
+                          </small>
+                        }
+                        <span [ngClass]="getStatusBadgeClass(ad.status) + ' ms-auto'">
+                          {{ getStatusText(ad.status) }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          @if (!categoryLoading && !categoryError && categoryAds.length === 0) {
+            <div class="alert alert-info mb-0" role="alert">
+              Aucun produit disponible dans cette categorie pour le moment.
+            </div>
+          }
+        </div>
+      }
     </div>
   </section>
 }

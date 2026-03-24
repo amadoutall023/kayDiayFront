@@ -15,10 +15,14 @@ import { Ad, Category, AdsResponse } from '../../models/ad';
 export class Home implements OnInit {
   ads: Ad[] = [];
   categories: Category[] = [];
+  categoryAds: Ad[] = [];
   loading = false;
   error = '';
+  categoryLoading = false;
+  categoryError = '';
   searchQuery = '';
   selectedCategoryId: number | null = null;
+  selectedCategory: Category | null = null;
   selectedAd: Ad | null = null;
   currentImageIndex = 0;
   showAdModal = false;
@@ -67,20 +71,46 @@ export class Home implements OnInit {
   }
 
   onCategoryClick(categoryId: number) {
+    this.selectedCategory = this.categories.find(category => category.id === categoryId) || null;
     this.selectedCategoryId = categoryId;
     this.loadAds();
-    // Mettre à jour le select dropdown
+    this.loadCategoryAds(categoryId);
+
     setTimeout(() => {
-      const select = document.querySelector('.form-select') as HTMLSelectElement;
-      if (select) {
-        select.value = categoryId.toString();
+      const categorySection = document.querySelector('#category-products');
+      if (categorySection) {
+        categorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 100);
-    // Scroll vers les annonces
-    const adsSection = document.querySelector('.bg-light');
-    if (adsSection) {
-      adsSection.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  }
+
+  onExploreCategoryChange() {
+    if (!this.selectedCategoryId) {
+      this.selectedCategory = null;
+      this.categoryAds = [];
+      this.categoryError = '';
+      this.loadAds();
+      return;
     }
+
+    this.onCategoryClick(this.selectedCategoryId);
+  }
+
+  loadCategoryAds(categoryId: number) {
+    this.categoryLoading = true;
+    this.categoryError = '';
+
+    this.adsService.getAds(1, 12, categoryId, 'all').subscribe({
+      next: (response: AdsResponse) => {
+        this.categoryAds = response.ads;
+        this.categoryLoading = false;
+      },
+      error: (err) => {
+        this.categoryLoading = false;
+        this.categoryError = 'Erreur lors du chargement des produits de cette categorie';
+        console.error('Erreur:', err);
+      }
+    });
   }
 
   onSearchChange() {

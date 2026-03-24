@@ -59,7 +59,7 @@
 .hero-search-input {
   border: none;
   padding-left: 4px;
-  font-size: 0.95rem;
+  font-size: 16px;
   color: var(--primary-green);
 }
 
@@ -72,7 +72,7 @@
 .hero-search-select {
   border: 1px solid #e9ecef;
   border-radius: 10px;
-  font-size: 0.9rem;
+  font-size: 16px;
   color: var(--primary-green);
 }
 
@@ -256,46 +256,20 @@
 }
 
 /* =========================================================
-   CATEGORY CARDS
+   CATEGORY SELECT
    ========================================================= */
-.home-category-card {
-  padding: 20px 12px;
-  border-radius: 14px;
+.home-category-select {
   border: 2px solid #e9ecef;
-  background: #fff;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.home-category-card:hover {
-  border-color: var(--orange);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(52, 79, 31, 0.12);
-}
-
-.home-category-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: rgba(244, 153, 26, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--orange);
-  font-size: 1.1rem;
-  transition: background 0.25s ease;
-}
-
-.home-category-card:hover .home-category-icon {
-  background: var(--orange);
-  color: #fff;
-}
-
-.home-category-name {
-  font-size: 0.8rem;
-  font-weight: 600;
+  border-radius: 14px;
+  min-height: 52px;
+  font-size: 16px;
   color: var(--primary-green);
+  box-shadow: 0 8px 24px rgba(52, 79, 31, 0.08);
+}
+
+.home-category-select:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 0.2rem rgba(244, 153, 26, 0.18);
 }
 
 /* =========================================================
