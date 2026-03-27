@@ -1,0 +1,23 @@
+name: Ping Backend
+
+on:
+  schedule:
+    # Execute toutes les 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  # Permet execution manuelle
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Expat Dakar Backend
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" "https://expat-dakar-backend.onrender.com/health")
+          echo "HTTP Status: $response"
+          if [ "$response" -eq 200 ]; then
+            echo "Backend actif!"
+          else
+            echo "Warning: Le backend a retourne $response"
+            exit 1
+          fi
