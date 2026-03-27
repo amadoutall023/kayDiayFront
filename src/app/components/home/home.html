@@ -100,9 +100,27 @@
         <h2 class="section-title mb-1">Dernières annonces</h2>
         <p class="text-muted mb-0 small">Les offres les plus récentes sur KayDiay</p>
       </div>
-      <button class="btn btn-primary align-self-start align-self-md-center" (click)="goToDashboard()">
-        <i class="fas fa-th-large me-2"></i>Voir toutes
-      </button>
+      <div class="d-flex align-items-stretch align-items-md-center flex-column flex-md-row gap-2 w-100 w-md-auto home-ads-toolbar">
+        <div class="input-group home-ads-search">
+          <span class="input-group-text home-ads-search-icon">
+            <i class="fas fa-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control home-ads-search-input"
+            placeholder="Rechercher dans les dernières annonces..."
+            [(ngModel)]="searchQuery"
+            (input)="onSearchChange()" />
+          @if (searchQuery) {
+            <button class="btn home-ads-clear-btn" type="button" (click)="clearSearch()">
+              <i class="fas fa-times"></i>
+            </button>
+          }
+        </div>
+        <button class="btn btn-primary align-self-start align-self-md-center" (click)="goToDashboard()">
+          <i class="fas fa-th-large me-2"></i>Voir toutes
+        </button>
+      </div>
     </div>
 
     <!-- Loading -->
