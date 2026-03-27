@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Ping Expat Dakar Backend
         run: |
-          response=$(curl -s -o /dev/null -w "%{http_code}" "https://expat-dakar-backend.onrender.com/health")
+          response=$(curl -s -o /dev/null -w "%{http_code}" "https://kaydiayback.onrender.com/health")
           echo "HTTP Status: $response"
           if [ "$response" -eq 200 ]; then
             echo "Backend actif!"
