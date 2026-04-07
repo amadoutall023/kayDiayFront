@@ -81,6 +81,12 @@
 
           <!-- Action Buttons -->
           <div class="d-flex gap-1 mt-2" *ngIf="isAdOwner(ad)">
+            <button
+              *ngIf="ad.status === 'expired'"
+              class="btn btn-outline-success btn-sm flex-fill"
+              (click)="republishAd(ad)">
+              <i class="fas fa-rotate-right me-1"></i>Republier
+            </button>
             <button class="btn btn-outline-primary btn-sm flex-fill" (click)="editAd(ad)">
               <i class="fas fa-edit me-1"></i>Modifier
             </button>

@@ -160,6 +160,24 @@ export class AdList implements OnInit {
     }
   }
 
+  republishAd(ad: Ad) {
+    const actionLabel = ad.status === 'expired' ? 'republier' : 'prolonger';
+    if (!confirm(`Voulez-vous ${actionLabel} l'annonce "${ad.title}" ?`)) {
+      return;
+    }
+
+    this.adsService.extendAd({ adId: ad.id }).subscribe({
+      next: (response) => {
+        alert(response.message);
+        this.loadAds();
+      },
+      error: (err) => {
+        console.error('Error republishing ad:', err);
+        alert(err?.error?.error || 'Erreur lors de la republication de l\'annonce');
+      }
+    });
+  }
+
   get isAdminView(): boolean {
     const role = this.authService.getCurrentUser()?.role;
     return role === 'admin' || role === 'moderator';

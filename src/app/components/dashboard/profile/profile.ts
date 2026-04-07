@@ -151,6 +151,9 @@ import { UsersService } from '../../../services/users';
                   </td>
                   <td>
                     <div class="btn-group btn-group-sm">
+                      <button *ngIf="ad.status === 'expired'" class="btn btn-outline-success" (click)="republishAd(ad)" title="Republier">
+                        <i class="fas fa-rotate-right"></i>
+                      </button>
                       <button class="btn btn-outline-primary" (click)="editAd(ad.id)" title="Modifier">
                         <i class="fas fa-edit"></i>
                       </button>
@@ -296,6 +299,23 @@ export class Profile implements OnInit {
       error: (error) => {
         console.error('Erreur lors de la suppression:', error);
         this.adToDelete = null;
+      }
+    });
+  }
+
+  republishAd(ad: Ad) {
+    if (!confirm(`Voulez-vous republier l'annonce "${ad.title}" ?`)) {
+      return;
+    }
+
+    this.adsService.extendAd({ adId: ad.id }).subscribe({
+      next: (response) => {
+        alert(response.message);
+        this.loadMyAds(this.currentPage);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la republication:', error);
+        alert(error?.error?.error || 'Erreur lors de la republication de l\'annonce');
       }
     });
   }
