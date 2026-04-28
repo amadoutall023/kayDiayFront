@@ -60,7 +60,9 @@ export class AuthService {
         id: payload.id,
         name: payload.name || '',
         email: payload.email,
-        role: payload.role
+        phone: payload.phone,
+        role: payload.role,
+        status: payload.status
       } as User;
     } catch {
       return null;
@@ -76,8 +78,23 @@ export class AuthService {
   }
 
   requestSellerRole(): Observable<any> {
-    return this.http.post<any>(`${API_BASE_URL}/users/request-seller`, {}, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http
+      .post<any>(`${API_BASE_URL}/users/request-seller`, {}, {
+        headers: this.getAuthHeaders()
+      })
+      .pipe(
+        tap(() => {
+          const currentUser = this.currentUserSubject.value;
+          if (!currentUser) {
+            return;
+          }
+
+          this.currentUserSubject.next({
+            ...currentUser,
+            role: 'pending_seller',
+            status: 'pending_verification'
+          });
+        })
+      );
   }
 }

@@ -7,6 +7,7 @@ interface Seller {
   id: number;
   name: string;
   email: string;
+  phone?: string | null;
   role: string;
   status: string;
   createdAt: string;
@@ -53,7 +54,8 @@ export class Sellers implements OnInit {
       const query = this.searchQuery.toLowerCase();
       this.filteredSellers = this.sellers.filter(seller =>
         seller.name.toLowerCase().includes(query) ||
-        seller.email.toLowerCase().includes(query)
+        seller.email.toLowerCase().includes(query) ||
+        (seller.phone || '').toLowerCase().includes(query)
       );
     }
   }

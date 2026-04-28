@@ -59,6 +59,7 @@
                 <tr>
                   <th>Vendeur</th>
                   <th>Email</th>
+                  <th>Téléphone</th>
                   <th>Rôle</th>
                   <th>Statut</th>
                   <th>Annonces</th>
@@ -80,6 +81,7 @@
                     </div>
                   </td>
                   <td>{{ seller.email }}</td>
+                  <td>{{ seller.phone || '-' }}</td>
                   <td>
                     <span class="badge" [ngClass]="getRoleBadgeClass(seller.role)">{{ getRoleText(seller.role) }}</span>
                   </td>

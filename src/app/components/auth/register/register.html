@@ -28,6 +28,17 @@
             </div>
 
             <div class="mb-3">
+              <label for="phone" class="form-label">Numéro de téléphone</label>
+              <input type="tel" class="form-control" id="phone" formControlName="phone"
+                placeholder="+221771234567"
+                [class.is-invalid]="phone?.invalid && phone?.touched">
+              <div class="invalid-feedback" *ngIf="phone?.invalid && phone?.touched">
+                <div *ngIf="phone?.errors?.['required']">Le numéro de téléphone est requis</div>
+                <div *ngIf="phone?.errors?.['minlength']">Le numéro de téléphone doit contenir au moins 8 caractères</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
               <label for="password" class="form-label">Mot de passe</label>
               <input type="password" class="form-control" id="password" formControlName="password"
                 [class.is-invalid]="password?.invalid && password?.touched">

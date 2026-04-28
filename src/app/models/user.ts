@@ -2,8 +2,10 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  phone?: string;
   role: string;
-  createdAt: string;
+  status?: string;
+  createdAt?: string;
 }
 
 export interface LoginRequest {
@@ -14,6 +16,7 @@ export interface LoginRequest {
 export interface RegisterRequest {
   name: string;
   email: string;
+  phone?: string;
   password: string;
   role?: string;
 }

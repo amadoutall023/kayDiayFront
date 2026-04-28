@@ -23,6 +23,7 @@ export class Register {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.minLength(8)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
       role: ['seller'] // Par défaut : vendeur
@@ -71,6 +72,7 @@ export class Register {
 
   get name() { return this.registerForm.get('name'); }
   get email() { return this.registerForm.get('email'); }
+  get phone() { return this.registerForm.get('phone'); }
   get password() { return this.registerForm.get('password'); }
   get confirmPassword() { return this.registerForm.get('confirmPassword'); }
 }

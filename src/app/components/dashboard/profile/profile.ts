@@ -48,7 +48,7 @@ import { UsersService } from '../../../services/users';
           </div>
           
           <!-- Seller Request Status -->
-          <div *ngIf="user?.role === 'seller' && user?.status === 'pending'" class="mt-3 p-3 bg-warning rounded">
+          <div *ngIf="user?.role === 'pending_seller' && user?.status === 'pending_verification'" class="mt-3 p-3 bg-warning rounded">
             <i class="fas fa-clock me-2"></i>
             <span>Votre demande de vendeur est en cours d'examen par l'administrateur.</span>
           </div>
@@ -325,6 +325,7 @@ export class Profile implements OnInit {
       case 'admin': return 'bg-danger';
       case 'moderator': return 'bg-warning text-dark';
       case 'seller': return 'bg-primary';
+      case 'pending_seller': return 'bg-warning text-dark';
       default: return 'bg-secondary';
     }
   }
@@ -334,6 +335,7 @@ export class Profile implements OnInit {
       case 'admin': return 'Administrateur';
       case 'moderator': return 'Modérateur';
       case 'seller': return 'Vendeur';
+      case 'pending_seller': return 'Vendeur en attente';
       default: return 'Utilisateur';
     }
   }

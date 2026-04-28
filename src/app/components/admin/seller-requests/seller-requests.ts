@@ -15,6 +15,7 @@ interface SellerRequest {
     id: number;
     name: string;
     email: string;
+    phone?: string | null;
     role: string;
     status: string;
     createdAt: string;
