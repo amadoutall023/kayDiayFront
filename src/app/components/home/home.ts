@@ -1,10 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AdsService } from '../../services/ads';
-import { AuthService } from '../../services/auth';
-import { Ad, Category, AdsResponse } from '../../models/ad';
+import { Ad, AdsResponse, Category } from '../../models/ad';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +21,7 @@ import { Ad, Category, AdsResponse } from '../../models/ad';
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
-export class Home implements OnInit {
+export class Home implements OnInit, OnDestroy {
   ads: Ad[] = [];
   categories: Category[] = [];
   categoryAds: Ad[] = [];
@@ -21,21 +30,47 @@ export class Home implements OnInit {
   categoryLoading = false;
   categoryError = '';
   searchQuery = '';
+  searchCategoryId: number | null = null;
   selectedCategoryId: number | null = null;
   selectedCategory: Category | null = null;
   selectedAd: Ad | null = null;
   currentImageIndex = 0;
   showAdModal = false;
+  contactMessage = '';
+
+  readonly skeletonCards = [1, 2, 3, 4, 5, 6];
+
+  @ViewChild('modalCloseButton') private modalCloseButton?: ElementRef<HTMLButtonElement>;
+
+  private readonly searchInput$ = new Subject<string>();
+  private readonly destroyRef: DestroyRef;
+  private allAds: Ad[] = [];
+  private adsRequestId = 0;
+  private categoryRequestId = 0;
+  private modalTrigger: HTMLElement | null = null;
+  private previousBodyOverflow = '';
 
   constructor(
     private adsService: AdsService,
-    private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    destroyRef: DestroyRef
+  ) {
+    this.destroyRef = destroyRef;
+  }
 
   ngOnInit() {
+    this.searchInput$
+      .pipe(debounceTime(180), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.applySearch());
+
     this.loadCategories();
     this.loadAds();
+  }
+
+  ngOnDestroy() {
+    if (this.showAdModal) {
+      document.body.style.overflow = this.previousBodyOverflow;
+    }
   }
 
   loadCategories() {
@@ -49,38 +84,88 @@ export class Home implements OnInit {
     });
   }
 
-  loadAds() {
+  loadAds(categoryId?: number) {
+    const requestId = ++this.adsRequestId;
     this.loading = true;
     this.error = '';
 
-    this.adsService.getAds(1, 12, this.selectedCategoryId || undefined, 'all').subscribe({
+    this.adsService.getAds(1, 12, categoryId, 'all').subscribe({
       next: (response: AdsResponse) => {
-        this.ads = response.ads.filter(ad =>
-          !this.searchQuery ||
-          ad.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          ad.description.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
+        if (requestId !== this.adsRequestId) {
+          return;
+        }
+
+        this.allAds = response.ads;
+        this.applySearch();
         this.loading = false;
       },
       error: (err) => {
+        if (requestId !== this.adsRequestId) {
+          return;
+        }
+
         this.loading = false;
-        this.error = 'Erreur lors du chargement des annonces';
+        this.error = 'Les annonces ne sont pas disponibles pour le moment.';
         console.error('Erreur:', err);
       }
     });
   }
 
-  onCategoryClick(categoryId: number) {
-    this.selectedCategory = this.categories.find(category => category.id === categoryId) || null;
-    this.selectedCategoryId = categoryId;
+  private applySearch() {
+    const query = this.searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      this.ads = [...this.allAds];
+      return;
+    }
+
+    this.ads = this.allAds.filter((ad) => {
+      const searchableText = [
+        ad.title,
+        ad.description,
+        ad.address,
+        ad.category?.name
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return searchableText.includes(query);
+    });
+  }
+
+  onSearchChange() {
+    this.searchInput$.next(this.searchQuery);
+  }
+
+  submitSearch() {
+    this.applySearch();
+    document.querySelector('#latest-listings')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  onCategoryFilterChange() {
+    this.loadAds(this.searchCategoryId ?? undefined);
+  }
+
+  clearSearch() {
+    this.searchQuery = '';
+    this.applySearch();
+  }
+
+  resetSearchFilters() {
+    this.searchQuery = '';
+    this.searchCategoryId = null;
+    this.applySearch();
     this.loadAds();
+  }
+
+  onCategoryClick(categoryId: number) {
+    this.selectedCategory = this.categories.find((category) => category.id === categoryId) || null;
+    this.selectedCategoryId = categoryId;
     this.loadCategoryAds(categoryId);
 
     setTimeout(() => {
-      const categorySection = document.querySelector('#category-products');
-      if (categorySection) {
-        categorySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      document.querySelector('#category-products')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 150);
   }
 
@@ -89,45 +174,42 @@ export class Home implements OnInit {
       this.selectedCategory = null;
       this.categoryAds = [];
       this.categoryError = '';
-      this.loadAds();
       return;
     }
 
     this.onCategoryClick(this.selectedCategoryId);
   }
 
+  retrySelectedCategory() {
+    if (this.selectedCategoryId) {
+      this.loadCategoryAds(this.selectedCategoryId);
+    }
+  }
+
   loadCategoryAds(categoryId: number) {
+    const requestId = ++this.categoryRequestId;
     this.categoryLoading = true;
     this.categoryError = '';
 
     this.adsService.getAds(1, 12, categoryId, 'all').subscribe({
       next: (response: AdsResponse) => {
+        if (requestId !== this.categoryRequestId) {
+          return;
+        }
+
         this.categoryAds = response.ads;
         this.categoryLoading = false;
       },
       error: (err) => {
+        if (requestId !== this.categoryRequestId) {
+          return;
+        }
+
         this.categoryLoading = false;
-        this.categoryError = 'Erreur lors du chargement des produits de cette categorie';
+        this.categoryError = 'Les annonces de cette catégorie ne sont pas disponibles pour le moment.';
         console.error('Erreur:', err);
       }
     });
-  }
-
-  onSearchChange() {
-    this.loadAds();
-  }
-
-  onCategoryFilterChange() {
-    this.loadAds();
-  }
-
-  onCategorySelectChange() {
-    this.loadAds();
-  }
-
-  clearSearch() {
-    this.searchQuery = '';
-    this.loadAds();
   }
 
   formatPrice(price: number): string {
@@ -140,21 +222,31 @@ export class Home implements OnInit {
 
   getStatusBadgeClass(status: string): string {
     switch (status) {
-      case 'active': return 'badge bg-success';
-      case 'pending_verification': return 'badge bg-warning';
-      case 'expired': return 'badge bg-secondary';
-      case 'rejected': return 'badge bg-danger';
-      default: return 'badge bg-secondary';
+      case 'active':
+        return 'badge home-status-badge home-status-badge--available';
+      case 'pending_verification':
+        return 'badge home-status-badge home-status-badge--pending';
+      case 'expired':
+        return 'badge home-status-badge home-status-badge--muted';
+      case 'rejected':
+        return 'badge home-status-badge home-status-badge--unavailable';
+      default:
+        return 'badge home-status-badge home-status-badge--muted';
     }
   }
 
   getStatusText(status: string): string {
     switch (status) {
-      case 'active': return 'Active';
-      case 'pending_verification': return 'En attente';
-      case 'expired': return 'Expirée';
-      case 'rejected': return 'Rejetée';
-      default: return status;
+      case 'active':
+        return 'Disponible';
+      case 'pending_verification':
+        return 'En vérification';
+      case 'expired':
+        return 'Expirée';
+      case 'rejected':
+        return 'Indisponible';
+      default:
+        return status;
     }
   }
 
@@ -168,27 +260,83 @@ export class Home implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
-  openAdModal(ad: Ad) {
+  openAdModal(ad: Ad, trigger?: EventTarget | null) {
     this.selectedAd = ad;
     this.currentImageIndex = 0;
+    this.contactMessage = '';
+    this.modalTrigger = trigger instanceof HTMLElement ? trigger : null;
+    this.previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     this.showAdModal = true;
+
+    setTimeout(() => this.modalCloseButton?.nativeElement.focus());
   }
 
   closeAdModal() {
+    if (!this.showAdModal) {
+      return;
+    }
+
     this.showAdModal = false;
     this.selectedAd = null;
     this.currentImageIndex = 0;
+    this.contactMessage = '';
+    document.body.style.overflow = this.previousBodyOverflow;
+
+    const trigger = this.modalTrigger;
+    this.modalTrigger = null;
+    setTimeout(() => {
+      if (trigger?.isConnected) {
+        trigger.focus();
+      }
+    });
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.showAdModal) {
+      this.closeAdModal();
+    }
+  }
+
+  handleModalKeydown(event: KeyboardEvent) {
+    if (event.key !== 'Tab') {
+      return;
+    }
+
+    const modal = event.currentTarget as HTMLElement;
+    const focusableElements = Array.from(
+      modal.querySelectorAll<HTMLElement>('[data-modal-focusable]')
+    ).filter((element) => !element.hasAttribute('disabled'));
+
+    if (!focusableElements.length) {
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
   }
 
   nextImage() {
-    if (this.selectedAd && this.selectedAd.images && this.selectedAd.images.length > 0) {
+    if (this.selectedAd?.images?.length) {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedAd.images.length;
     }
   }
 
   prevImage() {
-    if (this.selectedAd && this.selectedAd.images && this.selectedAd.images.length > 0) {
-      this.currentImageIndex = this.currentImageIndex === 0 ? this.selectedAd.images.length - 1 : this.currentImageIndex - 1;
+    if (this.selectedAd?.images?.length) {
+      this.currentImageIndex =
+        this.currentImageIndex === 0
+          ? this.selectedAd.images.length - 1
+          : this.currentImageIndex - 1;
     }
   }
 
@@ -196,21 +344,30 @@ export class Home implements OnInit {
     this.currentImageIndex = index;
   }
 
+  onImageError(event: Event) {
+    const image = event.target as HTMLImageElement;
+    image.hidden = true;
+    image.parentElement
+      ?.querySelector<HTMLElement>('.home-image-fallback')
+      ?.classList.add('home-image-fallback--visible');
+  }
+
   contactSellerOnWhatsApp() {
     if (!this.selectedAd?.phone) {
-      alert('Ce vendeur n\'a pas renseigné de numéro WhatsApp.');
+      this.contactMessage = 'Ce vendeur n’a pas renseigné de numéro WhatsApp.';
       return;
     }
 
     const sanitizedPhone = this.selectedAd.phone.replace(/\D/g, '');
     if (!sanitizedPhone) {
-      alert('Le numéro du vendeur est invalide.');
+      this.contactMessage = 'Le numéro du vendeur est invalide.';
       return;
     }
 
     const message = encodeURIComponent(
       `Bonjour, je suis intéressé(e) par votre produit "${this.selectedAd.title}". Est-il toujours disponible ?`
     );
-    window.open(`https://wa.me/${sanitizedPhone}?text=${message}`, '_blank');
+    this.contactMessage = '';
+    window.open(`https://wa.me/${sanitizedPhone}?text=${message}`, '_blank', 'noopener');
   }
 }

@@ -1,220 +1,230 @@
-<!-- =========================================================
-   HERO SECTION
-   ========================================================= -->
-<section class="hero-section">
-  <div class="container py-5 position-relative">
-    <div class="row justify-content-center">
-      <div class="col-lg-8 text-center">
-
-        <!-- Location badge -->
-        <div class="mb-3">
-          <span class="hero-location-badge">
-            <i class="fas fa-map-marker-alt me-1"></i> Dakar, Sénégal
+<div class="kaydiay-home">
+  <!-- Hero / search -->
+  <section class="home-hero-shell" aria-labelledby="home-title">
+    <div class="container position-relative">
+      <div class="home-hero-grid">
+        <div class="home-hero-copy">
+          <span class="home-location-badge">
+            <i class="fas fa-location-dot me-2" aria-hidden="true"></i>Dakar, Sénégal
           </span>
+          <h1 id="home-title" class="home-hero-title">Achetez &amp; Vendez<br />entre expatriés</h1>
+          <p class="home-hero-subtitle">
+            KayDiay rassemble les bonnes annonces et les bons contacts pour la communauté internationale à Dakar.
+          </p>
         </div>
+        <div class="home-hero-media">
+          <img
+            src="/assets/images/cc.avif"
+            alt="Objets colorés exposés sur un marché"
+            class="home-hero-image" />
+        </div>
+      </div>
 
-        <h1 class="hero-title mb-3">
-          Achetez &amp; Vendez<br>entre expatriés
-        </h1>
-        <p class="hero-subtitle mb-5">
-          KayDiay — la plateforme de confiance pour la communauté internationale à Dakar.
-          Des milliers d'annonces vous attendent.
-        </p>
-
-        <!-- Search card -->
-        <div class="hero-search-card mb-5">
-          <div class="row g-2 align-items-center">
-            <div class="col-12 col-md-5">
-              <div class="input-group">
-                <span class="input-group-text hero-search-icon">
-                  <i class="fas fa-search"></i>
-                </span>
-                <input
-                  type="text"
-                  class="form-control hero-search-input"
-                  placeholder="Rechercher des annonces..."
-                  [(ngModel)]="searchQuery"
-                  (input)="onSearchChange()" />
-                @if (searchQuery) {
-                  <button class="btn hero-clear-btn" type="button" (click)="clearSearch()">
-                    <i class="fas fa-times"></i>
-                  </button>
-                }
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <select
-                class="form-select hero-search-select"
-                [(ngModel)]="selectedCategoryId"
-                (change)="onCategoryFilterChange()">
-                <option [ngValue]="null">Toutes les catégories</option>
-                @for (category of categories; track category.id) {
-                  <option [ngValue]="category.id">{{ category.name }}</option>
-                }
-              </select>
-            </div>
-            <div class="col-12 col-md-3">
-              <button class="btn btn-primary w-100 hero-search-btn" (click)="onSearchChange()">
-                <i class="fas fa-search me-2"></i>Rechercher
+      <form
+        class="home-search-counter"
+        role="search"
+        aria-label="Rechercher une annonce"
+        aria-controls="latest-listings"
+        (ngSubmit)="submitSearch()">
+        <div class="home-search-field home-search-field--query">
+          <label class="home-field-label" for="home-search">Rechercher</label>
+          <div class="input-group home-input-group">
+            <span class="input-group-text home-search-icon" aria-hidden="true">
+              <i class="fas fa-search"></i>
+            </span>
+            <input
+              id="home-search"
+              name="searchQuery"
+              type="search"
+              class="form-control home-search-input"
+              placeholder="Rechercher des annonces..."
+              autocomplete="off"
+              [(ngModel)]="searchQuery"
+              (input)="onSearchChange()" />
+            @if (searchQuery) {
+              <button
+                class="btn home-clear-btn"
+                type="button"
+                aria-label="Effacer la recherche"
+                (click)="clearSearch()">
+                <i class="fas fa-times" aria-hidden="true"></i>
               </button>
-            </div>
+            }
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================
-   STATS BAR
-   ========================================================= -->
-<div class="stats-bar bg-white shadow-sm">
-  <div class="container">
-    <div class="row g-0 text-center">
-      <div class="col-4 stats-item">
-        <div class="stats-number">1 000+</div>
-        <div class="stats-label"><i class="fas fa-tag me-1"></i>Annonces actives</div>
-      </div>
-      <div class="col-4 stats-item stats-item-border">
-        <div class="stats-number">{{ categories.length }}</div>
-        <div class="stats-label"><i class="fas fa-th-large me-1"></i>Catégories</div>
-      </div>
-      <div class="col-4 stats-item">
-        <div class="stats-number">500+</div>
-        <div class="stats-label"><i class="fas fa-users me-1"></i>Vendeurs actifs</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- =========================================================
-   ADS SECTION
-   ========================================================= -->
-<section class="ads-section py-5">
-  <div class="container">
-
-    <!-- Section header -->
-    <div class="d-flex justify-content-between align-items-start align-items-md-center mb-4 flex-column flex-md-row gap-2">
-      <div>
-        <h2 class="section-title mb-1">Dernières annonces</h2>
-        <p class="text-muted mb-0 small">Les offres les plus récentes sur KayDiay</p>
-      </div>
-      <div class="d-flex align-items-stretch align-items-md-center flex-column flex-md-row gap-2 w-100 w-md-auto home-ads-toolbar">
-        <div class="input-group home-ads-search">
-          <span class="input-group-text home-ads-search-icon">
-            <i class="fas fa-search"></i>
-          </span>
-          <input
-            type="text"
-            class="form-control home-ads-search-input"
-            placeholder="Rechercher dans les dernières annonces..."
-            [(ngModel)]="searchQuery"
-            (input)="onSearchChange()" />
-          @if (searchQuery) {
-            <button class="btn home-ads-clear-btn" type="button" (click)="clearSearch()">
-              <i class="fas fa-times"></i>
-            </button>
-          }
+        <div class="home-search-field">
+          <label class="home-field-label" for="home-category-filter">Filtrer par catégorie</label>
+          <select
+            id="home-category-filter"
+            name="searchCategoryId"
+            class="form-select home-search-select"
+            [disabled]="categories.length === 0"
+            [(ngModel)]="searchCategoryId"
+            (change)="onCategoryFilterChange()">
+            <option [ngValue]="null">Toutes les catégories</option>
+            @for (category of categories; track category.id) {
+              <option [ngValue]="category.id">{{ category.name | titlecase }}</option>
+            }
+          </select>
         </div>
-        <button class="btn btn-primary align-self-start align-self-md-center" (click)="goToDashboard()">
-          <i class="fas fa-th-large me-2"></i>Voir toutes
+
+        <button class="btn btn-primary home-search-btn" type="submit">
+          <i class="fas fa-search me-2" aria-hidden="true"></i>Rechercher
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Trust rail -->
+  <section class="home-stats-rail" aria-label="Repères KayDiay">
+    <div class="container">
+      <div class="home-stats-grid">
+        <div class="home-stat">
+          <strong class="home-stat-number">1 000+</strong>
+          <span class="home-stat-label"><i class="fas fa-tag me-1" aria-hidden="true"></i>Annonces actives</span>
+        </div>
+        <div class="home-stat">
+          <strong class="home-stat-number">{{ categories.length }}</strong>
+          <span class="home-stat-label"><i class="fas fa-layer-group me-1" aria-hidden="true"></i>Catégories</span>
+        </div>
+        <div class="home-stat">
+          <strong class="home-stat-number">500+</strong>
+          <span class="home-stat-label"><i class="fas fa-users me-1" aria-hidden="true"></i>Vendeurs actifs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest listings -->
+  <section id="latest-listings" class="home-section home-discovery-section" aria-labelledby="latest-listings-title">
+    <div class="container">
+      <div class="home-section-heading">
+        <div>
+          <h2 id="latest-listings-title" class="home-section-title">Dernières annonces</h2>
+          <p class="home-section-intro">Les offres les plus récentes sur KayDiay</p>
+        </div>
+        <button class="btn btn-outline-primary home-section-action" type="button" (click)="goToDashboard()">
+          <i class="fas fa-arrow-up-right-from-square me-2" aria-hidden="true"></i>Voir toutes
         </button>
       </div>
-    </div>
 
-    <!-- Loading -->
-    @if (loading) {
-      <div class="text-center py-5">
-        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
-          <span class="visually-hidden">Chargement...</span>
-        </div>
-        <p class="text-muted">Chargement des annonces...</p>
-      </div>
-    }
-
-    <!-- Error -->
-    @if (error) {
-      <div class="alert alert-danger d-flex align-items-center" role="alert">
-        <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
-      </div>
-    }
-
-    <!-- Ads Grid -->
-    @if (!loading && !error) {
-      <div class="row g-3 g-md-4">
-        @for (ad of ads.slice(0, 8); track ad.id) {
-          <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-            <div class="card h-100 home-ad-card" (click)="openAdModal(ad)">
-
-              <!-- Image wrapper -->
-              <div class="home-ad-img-wrap">
-                @if (ad.images && ad.images.length > 0) {
-                  <img [src]="ad.images[0]" [alt]="ad.title" class="home-ad-img">
-                } @else {
-                  <div class="home-ad-img-placeholder">
-                    <i class="fas fa-image fa-2x"></i>
-                  </div>
-                }
-                <!-- Price overlay badge -->
-                <span class="home-ad-price-badge">{{ formatPrice(ad.price) }}</span>
-              </div>
-
-              <!-- Card body -->
-              <div class="card-body d-flex flex-column p-3">
-                <span class="category-badge align-self-start mb-2">{{ ad.category.name }}</span>
-                <h6 class="card-title mb-1 home-ad-title">{{ ad.title }}</h6>
-                <p class="card-text text-muted small mb-2 home-ad-desc">{{ ad.description }}</p>
-                <div class="mt-auto d-flex justify-content-between align-items-center">
-                  @if (ad.address) {
-                    <small class="text-muted text-truncate home-ad-address">
-                      <i class="fas fa-map-marker-alt me-1"></i>{{ ad.address }}
-                    </small>
-                  }
-                  <span [ngClass]="getStatusBadgeClass(ad.status) + ' ms-auto'">
-                    {{ getStatusText(ad.status) }}
-                  </span>
-                </div>
-              </div>
-
+      @if (loading) {
+        <div class="home-skeleton-grid" aria-hidden="true">
+          @for (skeleton of skeletonCards; track skeleton; let index = $index) {
+            <div class="home-skeleton-card" [class.home-skeleton-card--lead]="index === 0">
+              <div class="home-skeleton-media"></div>
+              <div class="home-skeleton-line home-skeleton-line--short"></div>
+              <div class="home-skeleton-line"></div>
+              <div class="home-skeleton-line home-skeleton-line--medium"></div>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+        <p class="visually-hidden" aria-live="polite">Chargement des annonces...</p>
+      }
 
-      <!-- Empty state -->
-      @if (ads.length === 0) {
-        <div class="text-center py-5">
-          <div class="empty-state-circle mx-auto mb-4">
-            <i class="fas fa-inbox fa-2x"></i>
-          </div>
-          <h4 class="fw-semibold mb-2">Aucune annonce disponible</h4>
-          <p class="text-muted mb-4">Soyez le premier à publier une annonce !</p>
-          <button class="btn btn-primary btn-lg" (click)="goToLogin()">
-            <i class="fas fa-plus me-2"></i>Créer une annonce
+      @if (error) {
+        <div class="alert home-alert home-alert--error d-flex align-items-center justify-content-between gap-3" role="alert">
+          <span><i class="fas fa-circle-exclamation me-2" aria-hidden="true"></i>{{ error }}</span>
+          <button class="btn btn-sm btn-outline-primary flex-shrink-0" type="button" (click)="loadAds(searchCategoryId ?? undefined)">
+            Réessayer
           </button>
         </div>
       }
-    }
 
-  </div>
-</section>
-
-<!-- =========================================================
-   CATEGORIES SECTION
-   ========================================================= -->
-@if (categories.length > 0) {
-  <section class="py-5 bg-white">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-start align-items-md-center mb-4 flex-column flex-md-row gap-2">
-        <div>
-          <h2 class="section-title mb-1">Explorer par catégories</h2>
-          <p class="text-muted mb-0 small">Trouvez exactement ce que vous cherchez</p>
+      @if (!loading && !error) {
+        <div class="home-results-meta" aria-live="polite">
+          <span>{{ ads.length }} annonce{{ ads.length > 1 ? 's' : '' }} trouvée{{ ads.length > 1 ? 's' : '' }}</span>
+          @if (searchQuery || searchCategoryId) {
+            <button class="btn btn-link home-reset-link" type="button" (click)="resetSearchFilters()">
+              Effacer les filtres
+            </button>
+          }
         </div>
-      </div>
-      <div class="row justify-content-center mb-4">
-        <div class="col-12 col-md-8 col-lg-6">
+
+        @if (ads.length > 0) {
+          <div class="home-listing-grid">
+            @for (ad of ads.slice(0, 8); track ad.id; let index = $index) {
+              <article
+                class="card home-ad-card"
+                [class.home-ad-card--lead]="index === 0"
+                tabindex="0"
+                role="button"
+                aria-haspopup="dialog"
+                [attr.aria-label]="'Voir l’annonce ' + ad.title"
+                (click)="openAdModal(ad, $event.currentTarget)"
+                (keydown.enter)="openAdModal(ad, $event.currentTarget)"
+                (keydown.space)="$event.preventDefault(); openAdModal(ad, $event.currentTarget)">
+                <div class="home-ad-media home-image-stage">
+                  @if (ad.images.length) {
+                    <img [src]="ad.images[0]" [alt]="ad.title" class="home-ad-img" (error)="onImageError($event)" />
+                    <div class="home-image-fallback" aria-hidden="true">
+                      <i class="fas fa-image" aria-hidden="true"></i>
+                      <span>Photo indisponible</span>
+                    </div>
+                  } @else {
+                    <div class="home-image-fallback home-image-fallback--visible">
+                      <i class="fas fa-image" aria-hidden="true"></i>
+                      <span>Photo indisponible</span>
+                    </div>
+                  }
+                  <span class="home-ad-price-badge">{{ formatPrice(ad.price) }}</span>
+                </div>
+                <div class="card-body home-ad-body">
+                  <div class="home-ad-topline">
+                    <span class="category-badge home-category-badge">{{ ad.category.name }}</span>
+                    <span class="home-ad-open-hint">Ouvrir <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+                  </div>
+                  <h3 class="home-ad-title">{{ ad.title }}</h3>
+                  <p class="home-ad-desc">{{ ad.description }}</p>
+                  <div class="home-ad-footer">
+                    @if (ad.address) {
+                      <span class="home-ad-address" [title]="ad.address">
+                        <i class="fas fa-location-dot me-1" aria-hidden="true"></i>{{ ad.address }}
+                      </span>
+                    }
+                    <span [ngClass]="getStatusBadgeClass(ad.status)">{{ getStatusText(ad.status) }}</span>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="home-empty-state" role="status">
+            <div class="home-empty-icon" aria-hidden="true"><i class="fas fa-magnifying-glass"></i></div>
+            @if (searchQuery || searchCategoryId) {
+              <h3>Aucune annonce ne correspond à votre recherche</h3>
+              <p>Essayez un autre mot-clé ou élargissez la sélection de catégorie.</p>
+              <button class="btn btn-primary" type="button" (click)="resetSearchFilters()">Afficher toutes les annonces</button>
+            } @else {
+              <h3>Aucune annonce disponible</h3>
+              <p>Soyez le premier à publier une annonce sur KayDiay.</p>
+              <button class="btn btn-primary" type="button" (click)="goToLogin()">
+                <i class="fas fa-plus me-2" aria-hidden="true"></i>Créer une annonce
+              </button>
+            }
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- Category explorer -->
+  @if (categories.length > 0) {
+    <section class="home-section home-category-section" aria-labelledby="category-explorer-title">
+      <div class="container">
+        <div class="home-section-heading home-section-heading--category">
+          <div>
+            <h2 id="category-explorer-title" class="home-section-title">Explorer par catégories</h2>
+            <p class="home-section-intro">Trouvez exactement ce que vous cherchez</p>
+          </div>
+        </div>
+
+        <div class="home-category-control">
+          <label class="home-field-label" for="home-category-explorer">Parcourir les annonces d’une catégorie</label>
           <select
+            id="home-category-explorer"
+            name="selectedCategoryId"
             class="form-select home-category-select"
             [(ngModel)]="selectedCategoryId"
             (change)="onExploreCategoryChange()">
@@ -224,301 +234,289 @@
             }
           </select>
         </div>
-      </div>
 
-      @if (selectedCategory) {
-        <div id="category-products" class="mt-5">
-          <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row gap-2">
-            <div>
-              <h3 class="section-title mb-1">{{ selectedCategory.name | titlecase }}</h3>
-              <p class="text-muted mb-0 small">Produits disponibles dans cette categorie</p>
-            </div>
-            <button class="btn btn-outline-primary btn-sm" (click)="selectedCategory = null; categoryAds = []; selectedCategoryId = null; loadAds()">
-              Voir tout
-            </button>
-          </div>
-
-          @if (categoryLoading) {
-            <div class="text-center py-4">
-              <div class="spinner-border text-primary mb-3" role="status">
-                <span class="visually-hidden">Chargement...</span>
+        @if (selectedCategory) {
+          <div id="category-products" class="home-category-results">
+            <div class="home-category-results-heading">
+              <div>
+                <span class="home-category-rule" aria-hidden="true"></span>
+                <h3>{{ selectedCategory.name | titlecase }}</h3>
+                <p>Les annonces disponibles dans cette catégorie</p>
               </div>
-              <p class="text-muted mb-0">Chargement des produits...</p>
+              <button class="btn btn-outline-primary btn-sm" type="button" (click)="selectedCategory = null; categoryAds = []; selectedCategoryId = null">
+                Voir tout
+              </button>
             </div>
-          }
 
-          @if (categoryError) {
-            <div class="alert alert-danger" role="alert">
-              {{ categoryError }}
-            </div>
-          }
+            @if (categoryLoading) {
+              <div class="home-category-loading" aria-live="polite">
+                <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement...</span></div>
+                <span>Chargement des annonces...</span>
+              </div>
+            }
 
-          @if (!categoryLoading && !categoryError && categoryAds.length > 0) {
-            <div class="row g-3 g-md-4">
-              @for (ad of categoryAds; track ad.id) {
-                <div class="col-6 col-sm-6 col-md-4 col-lg-3">
-                  <div class="card h-100 home-ad-card" (click)="openAdModal(ad)">
-                    <div class="home-ad-img-wrap">
-                      @if (ad.images && ad.images.length > 0) {
-                        <img [src]="ad.images[0]" [alt]="ad.title" class="home-ad-img">
+            @if (categoryError) {
+              <div class="alert home-alert home-alert--error d-flex align-items-center justify-content-between gap-3" role="alert">
+                <span><i class="fas fa-circle-exclamation me-2" aria-hidden="true"></i>{{ categoryError }}</span>
+                <button class="btn btn-sm btn-outline-primary flex-shrink-0" type="button" (click)="retrySelectedCategory()">Réessayer</button>
+              </div>
+            }
+
+            @if (!categoryLoading && !categoryError && categoryAds.length > 0) {
+              <div class="home-category-grid">
+                @for (ad of categoryAds; track ad.id) {
+                  <article
+                    class="card home-ad-card"
+                    tabindex="0"
+                    role="button"
+                    aria-haspopup="dialog"
+                    [attr.aria-label]="'Voir l’annonce ' + ad.title"
+                    (click)="openAdModal(ad, $event.currentTarget)"
+                    (keydown.enter)="openAdModal(ad, $event.currentTarget)"
+                    (keydown.space)="$event.preventDefault(); openAdModal(ad, $event.currentTarget)">
+                    <div class="home-ad-media home-image-stage">
+                      @if (ad.images.length) {
+                        <img [src]="ad.images[0]" [alt]="ad.title" class="home-ad-img" (error)="onImageError($event)" />
+                        <div class="home-image-fallback" aria-hidden="true">
+                          <i class="fas fa-image" aria-hidden="true"></i>
+                          <span>Photo indisponible</span>
+                        </div>
                       } @else {
-                        <div class="home-ad-img-placeholder">
-                          <i class="fas fa-image fa-2x"></i>
+                        <div class="home-image-fallback home-image-fallback--visible">
+                          <i class="fas fa-image" aria-hidden="true"></i>
+                          <span>Photo indisponible</span>
                         </div>
                       }
                       <span class="home-ad-price-badge">{{ formatPrice(ad.price) }}</span>
                     </div>
-
-                    <div class="card-body d-flex flex-column p-3">
-                      <span class="category-badge align-self-start mb-2">{{ ad.category.name }}</span>
-                      <h6 class="card-title mb-1 home-ad-title">{{ ad.title }}</h6>
-                      <p class="card-text text-muted small mb-2 home-ad-desc">{{ ad.description }}</p>
-                      <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <div class="card-body home-ad-body">
+                      <div class="home-ad-topline">
+                        <span class="category-badge home-category-badge">{{ ad.category.name }}</span>
+                        <span class="home-ad-open-hint">Ouvrir <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
+                      </div>
+                      <h3 class="home-ad-title">{{ ad.title }}</h3>
+                      <p class="home-ad-desc">{{ ad.description }}</p>
+                      <div class="home-ad-footer">
                         @if (ad.address) {
-                          <small class="text-muted text-truncate home-ad-address">
-                            <i class="fas fa-map-marker-alt me-1"></i>{{ ad.address }}
-                          </small>
+                          <span class="home-ad-address" [title]="ad.address">
+                            <i class="fas fa-location-dot me-1" aria-hidden="true"></i>{{ ad.address }}
+                          </span>
                         }
-                        <span [ngClass]="getStatusBadgeClass(ad.status) + ' ms-auto'">
-                          {{ getStatusText(ad.status) }}
-                        </span>
+                        <span [ngClass]="getStatusBadgeClass(ad.status)">{{ getStatusText(ad.status) }}</span>
                       </div>
                     </div>
-                  </div>
-                </div>
-              }
-            </div>
-          }
+                  </article>
+                }
+              </div>
+            }
 
-          @if (!categoryLoading && !categoryError && categoryAds.length === 0) {
-            <div class="alert alert-info mb-0" role="alert">
-              Aucun produit disponible dans cette categorie pour le moment.
-            </div>
-          }
+            @if (!categoryLoading && !categoryError && categoryAds.length === 0) {
+              <div class="home-category-empty" role="status">
+                <i class="fas fa-inbox me-2" aria-hidden="true"></i>Aucune annonce disponible dans cette catégorie pour le moment.
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- Process rail -->
+  <section class="home-section home-process-section" aria-labelledby="how-it-works-title">
+    <div class="container">
+      <div class="home-section-heading home-section-heading--process">
+        <div>
+          <h2 id="how-it-works-title" class="home-section-title">Comment ça marche ?</h2>
+          <p class="home-section-intro">Publier une annonce, simplement.</p>
         </div>
-      }
+      </div>
+
+      <div class="home-process-rail">
+        <article class="home-process-step">
+          <div class="home-process-marker">1</div>
+          <div class="home-process-content">
+            <i class="fas fa-user-plus home-process-icon" aria-hidden="true"></i>
+            <h3>Inscrivez-vous</h3>
+            <p>Créez votre compte gratuit et rejoignez la communauté.</p>
+          </div>
+        </article>
+        <article class="home-process-step">
+          <div class="home-process-marker">2</div>
+          <div class="home-process-content">
+            <i class="fas fa-camera home-process-icon" aria-hidden="true"></i>
+            <h3>Publiez votre annonce</h3>
+            <p>Ajoutez vos photos et votre description en quelques clics.</p>
+          </div>
+        </article>
+        <article class="home-process-step">
+          <div class="home-process-marker">3</div>
+          <div class="home-process-content">
+            <i class="fas fa-handshake home-process-icon" aria-hidden="true"></i>
+            <h3>Vendez rapidement</h3>
+            <p>Échangez directement avec des acheteurs via WhatsApp.</p>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
-}
 
-<!-- =========================================================
-   HOW IT WORKS
-   ========================================================= -->
-<section class="ads-section py-5">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="section-title">Comment ça marche ?</h2>
-      <p class="text-muted">Simple, rapide et gratuit</p>
-    </div>
-    <div class="row g-4 justify-content-center">
-
-      <div class="col-12 col-md-4">
-        <div class="how-card text-center">
-          <div class="how-step-badge">1</div>
-          <div class="how-icon-wrap mx-auto mb-3">
-            <i class="fas fa-user-plus fa-xl"></i>
-          </div>
-          <h5 class="fw-bold mb-2">Inscrivez-vous</h5>
-          <p class="text-muted small mb-0">Créez votre compte gratuit en quelques secondes et rejoignez la communauté.</p>
+  <!-- Conversion -->
+  <section class="home-section home-conversion-section" aria-labelledby="conversion-title">
+    <div class="container">
+      <div class="home-conversion-panel">
+        <div class="home-conversion-main">
+          <span class="home-conversion-kicker"><i class="fas fa-store me-2" aria-hidden="true"></i>Pour les vendeurs</span>
+          <h2 id="conversion-title">Votre prochaine annonce commence ici.</h2>
+          <p>Présentez ce que vous vendez à une communauté locale et internationale à Dakar.</p>
+          <button class="btn btn-light" type="button" (click)="goToLogin()">
+            <i class="fas fa-plus me-2" aria-hidden="true"></i>Publier une annonce
+          </button>
         </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="how-card text-center">
-          <div class="how-step-badge">2</div>
-          <div class="how-icon-wrap mx-auto mb-3">
-            <i class="fas fa-camera fa-xl"></i>
-          </div>
-          <h5 class="fw-bold mb-2">Publiez votre annonce</h5>
-          <p class="text-muted small mb-0">Ajoutez photos et description en quelques clics. C'est entièrement gratuit.</p>
-        </div>
-      </div>
-
-      <div class="col-12 col-md-4">
-        <div class="how-card text-center">
-          <div class="how-step-badge">3</div>
-          <div class="how-icon-wrap mx-auto mb-3">
-            <i class="fas fa-handshake fa-xl"></i>
-          </div>
-          <h5 class="fw-bold mb-2">Vendez rapidement</h5>
-          <p class="text-muted small mb-0">Connectez-vous avec des acheteurs de votre communauté via WhatsApp.</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- =========================================================
-   CTA BANNER
-   ========================================================= -->
-<section class="cta-section py-5">
-  <div class="container">
-    <div class="row g-4">
-
-      <div class="col-12 col-md-6">
-        <div class="cta-card text-center">
-          <div class="cta-icon-wrap mx-auto mb-3">
-            <i class="fas fa-shopping-bag fa-xl"></i>
-          </div>
-          <h4 class="fw-bold mb-2">Acheter</h4>
-          <p class="text-muted mb-4">Trouvez tout ce dont vous avez besoin auprès d'autres expatriés à Dakar.</p>
-          <button class="btn btn-primary btn-lg" (click)="goToDashboard()">
-            <i class="fas fa-compass me-2"></i>Explorer les annonces
+        <div class="home-conversion-secondary">
+          <p>Vous cherchez encore ? Parcourez les annonces disponibles.</p>
+          <button class="btn btn-outline-light" type="button" (click)="goToDashboard()">
+            Explorer les annonces <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>
           </button>
         </div>
       </div>
-
-      <div class="col-12 col-md-6">
-        <div class="cta-card cta-card-accent text-center">
-          <div class="cta-icon-wrap cta-icon-light mx-auto mb-3">
-            <i class="fas fa-store fa-xl"></i>
-          </div>
-          <h4 class="fw-bold mb-2 text-white">Vendre</h4>
-          <p class="mb-4" style="color: rgba(255,255,255,0.85);">Publiez vos annonces gratuitement et trouvez des acheteurs rapidement.</p>
-          <button class="btn btn-light btn-lg" (click)="goToLogin()">
-            <i class="fas fa-plus me-2"></i>Publier une annonce
-          </button>
-        </div>
-      </div>
-
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- =========================================================
-   AD DETAIL MODAL
-   ========================================================= -->
-@if (showAdModal && selectedAd) {
-  <div class="modal fade show d-block home-modal-backdrop" tabindex="-1" (click)="closeAdModal()">
-    <div class="modal-dialog modal-lg modal-dialog-centered" (click)="$event.stopPropagation()">
-      <div class="modal-content rounded-4 overflow-hidden border-0 shadow-lg">
+  <!-- Ad detail modal -->
+  @if (showAdModal && selectedAd) {
+    <div
+      class="modal fade show d-block home-modal-backdrop"
+      tabindex="-1"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ad-modal-title"
+      aria-describedby="ad-modal-description"
+      (click)="closeAdModal()"
+      (keydown)="handleModalKeydown($event)">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" (click)="$event.stopPropagation()">
+        <div class="modal-content home-modal-content">
+          <div class="modal-header home-modal-header">
+            <h2 id="ad-modal-title" class="modal-title">{{ selectedAd.title }}</h2>
+            <button
+              #modalCloseButton
+              type="button"
+              class="btn-close btn-close-white"
+              data-modal-focusable
+              aria-label="Fermer le détail de l’annonce"
+              (click)="closeAdModal()"></button>
+          </div>
 
-        <!-- Modal Header -->
-        <div class="modal-header border-0 pb-2" style="background: var(--primary-green);">
-          <h5 class="modal-title fw-bold text-truncate" style="color: var(--cream);">
-            {{ selectedAd.title }}
-          </h5>
-          <button type="button" class="btn-close btn-close-white" (click)="closeAdModal()"></button>
-        </div>
-
-        <!-- Modal Body -->
-        <div class="modal-body p-0">
-          <div class="row g-0">
-
-            <!-- Image column -->
-            <div class="col-md-7 position-relative modal-img-col">
-              <div class="modal-main-img-wrap">
-                @if (selectedAd.images && selectedAd.images.length > 0) {
-                  <img
-                    [src]="selectedAd.images[currentImageIndex]"
-                    [alt]="selectedAd.title"
-                    class="modal-main-img">
-                } @else {
-                  <div class="modal-img-placeholder">
-                    <i class="fas fa-image fa-3x text-muted"></i>
-                  </div>
-                }
-              </div>
-
-              <!-- Nav arrows -->
-              @if (selectedAd.images && selectedAd.images.length > 1) {
-                <button class="modal-img-nav modal-img-nav-prev" (click)="prevImage()">
-                  <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="modal-img-nav modal-img-nav-next" (click)="nextImage()">
-                  <i class="fas fa-chevron-right"></i>
-                </button>
-
-                <!-- Thumbnails -->
-                <div class="modal-thumbs-row">
-                  @for (img of selectedAd.images; track $index) {
+          <div class="modal-body p-0" id="ad-modal-description">
+            <div class="row g-0">
+              <div class="col-md-7 home-modal-gallery">
+                <div class="home-modal-image-stage home-image-stage">
+                  @if (selectedAd.images.length) {
                     <img
-                      [src]="img"
-                      [alt]="'Image ' + ($index + 1)"
-                      class="modal-thumb"
-                      [class.modal-thumb-active]="$index === currentImageIndex"
-                      (click)="setCurrentImage($index)">
+                      [src]="selectedAd.images[currentImageIndex]"
+                      [alt]="selectedAd.title"
+                      class="home-modal-main-img"
+                      (error)="onImageError($event)" />
+                    <div class="home-image-fallback" aria-hidden="true">
+                      <i class="fas fa-image" aria-hidden="true"></i>
+                      <span>Photo indisponible</span>
+                    </div>
+                  } @else {
+                    <div class="home-image-fallback home-image-fallback--visible">
+                      <i class="fas fa-image" aria-hidden="true"></i>
+                      <span>Photo indisponible</span>
+                    </div>
+                  }
+
+                @if (selectedAd.images.length > 1) {
+                    <button
+                      type="button"
+                      class="home-modal-img-nav home-modal-img-nav--prev"
+                      data-modal-focusable
+                      aria-label="Image précédente"
+                      (click)="prevImage()">
+                      <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="home-modal-img-nav home-modal-img-nav--next"
+                      data-modal-focusable
+                      aria-label="Image suivante"
+                      (click)="nextImage()">
+                      <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                    <span class="home-modal-image-count" aria-live="polite">
+                      Image {{ currentImageIndex + 1 }} sur {{ selectedAd.images.length }}
+                    </span>
                   }
                 </div>
-              }
-            </div>
 
-            <!-- Details column -->
-            <div class="col-md-5 p-4 d-flex flex-column">
-
-              <!-- Price -->
-              <div class="modal-price-tag mb-3">{{ formatPrice(selectedAd.price) }}</div>
-
-              <!-- Badges -->
-              <div class="d-flex gap-2 flex-wrap mb-3">
-                <span [ngClass]="getStatusBadgeClass(selectedAd.status)">
-                  {{ getStatusText(selectedAd.status) }}
-                </span>
-                <span class="category-badge">{{ selectedAd.category.name }}</span>
+                @if (selectedAd.images.length > 1) {
+                  <div class="home-modal-thumbs" aria-label="Choisir une image">
+                    @for (img of selectedAd.images; track $index; let index = $index) {
+                      <button
+                        type="button"
+                        class="home-modal-thumb"
+                        [class.home-modal-thumb--active]="index === currentImageIndex"
+                        [attr.aria-current]="index === currentImageIndex ? 'true' : null"
+                        [attr.aria-label]="'Afficher l’image ' + (index + 1)"
+                        data-modal-focusable
+                        (click)="setCurrentImage(index)">
+                        <img [src]="img" [alt]="'Miniature de l’image ' + (index + 1)" (error)="onImageError($event)" />
+                      </button>
+                    }
+                  </div>
+                }
               </div>
 
-              <!-- Description -->
-              <p class="small text-muted mb-3">{{ selectedAd.description }}</p>
+              <div class="col-md-5 home-modal-details">
+                <div class="home-modal-price">{{ formatPrice(selectedAd.price) }}</div>
+                <div class="home-modal-badges">
+                  <span [ngClass]="getStatusBadgeClass(selectedAd.status)">{{ getStatusText(selectedAd.status) }}</span>
+                  <span class="category-badge home-category-badge">{{ selectedAd.category.name }}</span>
+                </div>
+                <p class="home-modal-description">{{ selectedAd.description }}</p>
 
-              <!-- Contact info -->
-              <div class="modal-contact-box mb-3">
-                <h6 class="fw-semibold mb-2 small text-uppercase" style="letter-spacing: 0.05em; color: var(--primary-green);">
-                  Contact
-                </h6>
-                @if (selectedAd.phone) {
-                  <div class="modal-contact-item">
-                    <i class="fas fa-phone text-muted me-2"></i>
-                    <a [href]="'tel:' + selectedAd.phone" class="text-decoration-none text-dark fw-medium">
-                      {{ selectedAd.phone }}
+                <div class="home-modal-contact">
+                  <span class="home-modal-label">Contact</span>
+                  @if (selectedAd.phone) {
+                    <a [href]="'tel:' + selectedAd.phone" data-modal-focusable>
+                      <i class="fas fa-phone me-2" aria-hidden="true"></i>{{ selectedAd.phone }}
                     </a>
-                  </div>
-                }
-                @if (selectedAd.address) {
-                  <div class="modal-contact-item">
-                    <i class="fas fa-map-marker-alt text-muted me-2"></i>{{ selectedAd.address }}
-                  </div>
-                }
-                <div class="modal-contact-item">
-                  <i class="fas fa-user text-muted me-2"></i>{{ selectedAd.user.name }}
+                  } @else {
+                    <span class="home-modal-contact-muted"><i class="fas fa-phone-slash me-2" aria-hidden="true"></i>Numéro non renseigné</span>
+                  }
+                  @if (selectedAd.address) {
+                    <span><i class="fas fa-location-dot me-2" aria-hidden="true"></i>{{ selectedAd.address }}</span>
+                  }
+                  <span><i class="fas fa-user me-2" aria-hidden="true"></i>{{ selectedAd.user.name }}</span>
+                </div>
+
+                <div class="home-modal-dates">
+                  <small><i class="fas fa-calendar-alt me-2" aria-hidden="true"></i>Publié le {{ selectedAd.createdAt | date:'dd/MM/yyyy' }}</small>
+                  @if (selectedAd.publishedAt) {
+                    <small><i class="fas fa-clock me-2" aria-hidden="true"></i>Activé le {{ selectedAd.publishedAt | date:'dd/MM/yyyy' }}</small>
+                  }
+                  @if (selectedAd.expiresAt) {
+                    <small><i class="fas fa-hourglass-end me-2" aria-hidden="true"></i>Expire le {{ selectedAd.expiresAt | date:'dd/MM/yyyy' }}</small>
+                  }
                 </div>
               </div>
-
-              <!-- Dates -->
-              <div class="mt-auto">
-                <small class="text-muted d-block">
-                  <i class="fas fa-calendar-alt me-1"></i>
-                  Publié le {{ selectedAd.createdAt | date:'dd/MM/yyyy' }}
-                </small>
-                @if (selectedAd.publishedAt) {
-                  <small class="text-muted d-block">
-                    <i class="fas fa-clock me-1"></i>
-                    Activé le {{ selectedAd.publishedAt | date:'dd/MM/yyyy' }}
-                  </small>
-                }
-                @if (selectedAd.expiresAt) {
-                  <small class="text-muted d-block">
-                    <i class="fas fa-hourglass-end me-1"></i>
-                    Expire le {{ selectedAd.expiresAt | date:'dd/MM/yyyy' }}
-                  </small>
-                }
-              </div>
-
             </div>
           </div>
-        </div>
 
-        <!-- Modal Footer -->
-        <div class="modal-footer border-0" style="background: #f8f9fa;">
-          @if (selectedAd.phone) {
-            <button type="button" class="btn btn-whatsapp-design" (click)="contactSellerOnWhatsApp()">
-              <i class="fab fa-whatsapp me-2"></i>Discussion WhatsApp
-            </button>
-          }
-          <button type="button" class="btn btn-secondary" (click)="closeAdModal()">Fermer</button>
+          <div class="modal-footer home-modal-footer">
+            @if (contactMessage) {
+              <div class="home-modal-feedback" role="alert">{{ contactMessage }}</div>
+            }
+            @if (selectedAd.phone) {
+              <button type="button" class="btn btn-whatsapp-design" data-modal-focusable (click)="contactSellerOnWhatsApp()">
+                <i class="fab fa-whatsapp me-2" aria-hidden="true"></i>Discussion WhatsApp
+              </button>
+            }
+            <button type="button" class="btn btn-secondary" data-modal-focusable (click)="closeAdModal()">Fermer</button>
+          </div>
         </div>
-
       </div>
     </div>
-  </div>
-}
+  }
+</div>

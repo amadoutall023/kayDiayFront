@@ -69,32 +69,6 @@
     </div>
   </nav>
 
-  <!-- Bottom Navigation for Mobile -->
-  <nav class="bottom-nav d-md-none">
-    <a routerLink="/" class="bottom-nav-item" routerLinkActive="active">
-      <i class="fas fa-home"></i>
-      <span>Accueil</span>
-    </a>
-    <a routerLink="/dashboard/ads" class="bottom-nav-item" *ngIf="authService.isAuthenticated()"
-      routerLinkActive="active">
-      <i class="fas fa-list"></i>
-      <span>Annonces</span>
-    </a>
-    <a routerLink="/dashboard/ads/create" class="bottom-nav-item" *ngIf="authService.isAuthenticated()"
-      routerLinkActive="active">
-      <i class="fas fa-plus-circle"></i>
-      <span>Publier</span>
-    </a>
-    <a *ngIf="!authService.isAuthenticated()" [routerLink]="['/login']" class="bottom-nav-item">
-      <i class="fas fa-sign-in-alt"></i>
-      <span>Connexion</span>
-    </a>
-    <a class="bottom-nav-item" *ngIf="authService.isAuthenticated()" (click)="logout()">
-      <i class="fas fa-sign-out-alt"></i>
-      <span>Déconnexion</span>
-    </a>
-  </nav>
-
   <!-- Main Content -->
   <main class="main-content">
     <router-outlet />
