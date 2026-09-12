@@ -17,3 +17,7 @@ Servir les fichiers statiques avant la réécriture des routes Angular vers `ind
 Bootstrap est inclus dans la compilation afin que le menu fonctionne aussi lorsque l’interface est chargée hors connexion.
 
 Référence : https://angular.dev/ecosystem/service-workers/getting-started
+
+## Proposition sur mobile
+
+Un bandeau sous la navigation propose l’installation quand le navigateur fournit une invitation native. Sinon, il affiche les instructions pour Safari sur iPhone/iPad ou Chrome sur Android. Il peut être masqué et ne s’affiche pas lorsque le site est ouvert en mode application. Le navigateur conserve le contrôle de la disponibilité de l’installation ; le bouton ne peut pas forcer une invitation native.
