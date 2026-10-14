@@ -1,0 +1,9 @@
+:host { display: block; padding: 24px 0; }
+.card { border-radius: 18px; }
+.card-header h4 { font-size: 1.5rem; line-height: 1.4; }
+.card-body h3 { font-size: 2rem; letter-spacing: -.05em; }
+.card-body h6 { margin-bottom: 12px; font-size: .8rem; }
+.card-body > .mb-3 { padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.card-body > .mb-3:last-child { padding-bottom: 0; border: 0; }
+.card-body p { font-size: .88rem; color: var(--muted); white-space: pre-line; }
+@media (min-width: 992px) { .col-lg-4 > .card { position: sticky; top: 110px; } }

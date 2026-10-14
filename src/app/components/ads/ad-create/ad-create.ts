@@ -231,7 +231,7 @@ export class AdCreate implements OnInit {
           this.adsService.updateAd(this.editingAd.id, adData).subscribe({
             next: (response) => {
               this.loading = false;
-              this.success = 'Annonce modifiée avec succès !';
+              this.success = this.publicationMessage(response.ad);
               this.adForm.reset();
               this.capturedImages = [];
 
@@ -250,7 +250,7 @@ export class AdCreate implements OnInit {
           this.adsService.createAd(adData).subscribe({
             next: (response) => {
               this.loading = false;
-              this.success = 'Annonce créée avec succès ! Elle sera visible après validation par un administrateur.';
+              this.success = this.publicationMessage(response.ad);
               this.adForm.reset();
               this.capturedImages = [];
 
@@ -275,6 +275,12 @@ export class AdCreate implements OnInit {
       }
       this.markFormGroupTouched();
     }
+  }
+
+  private publicationMessage(ad: Ad): string {
+    if (ad.status === 'active') return 'Votre annonce est approuvée et publiée !';
+    if (ad.status === 'rejected') return `Annonce refusée : ${ad.verificationReason || 'contenu non autorisé'}`;
+    return 'Annonce enregistrée. Elle sera visible après vérification par un modérateur.';
   }
 
   private markFormGroupTouched() {

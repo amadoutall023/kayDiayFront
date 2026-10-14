@@ -1,15 +1,17 @@
-<div class="container mt-5">
+<section class="auth-layout container">
+  <aside class="auth-story"><span class="auth-kicker"><i class="fas fa-leaf me-2" aria-hidden="true"></i>Le marché de votre communauté</span><h1>Les bonnes choses<br>se partagent.</h1><p>Un meuble qui trouve sa place. Un vélo qui reprend la route. Un nouveau départ à Dakar.</p><div class="auth-story-photo" role="img" aria-label="Objets et trouvailles sur un marché"></div><div class="auth-story-caption"><span>Dakar, Sénégal</span><span>Une communauté. Mille possibilités.</span></div></aside>
+  <div class="auth-form-panel">
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-12">
       <div class="card">
         <div class="card-header text-center">
-          <h3>Inscription</h3>
+          <span class="auth-kicker">Rejoignez KayDiay</span><h2>Une nouvelle histoire commence ici.</h2><p>Créez votre compte et faites vos premières rencontres sur KayDiay.</p>
         </div>
         <div class="card-body">
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="name" class="form-label">Nom</label>
-              <input type="text" class="form-control" id="name" formControlName="name"
+              <input type="text" class="form-control" id="name" autocomplete="name" placeholder="Votre nom complet" formControlName="name"
                 [class.is-invalid]="name?.invalid && name?.touched">
               <div class="invalid-feedback" *ngIf="name?.invalid && name?.touched">
                 <div *ngIf="name?.errors?.['required']">Le nom est requis</div>
@@ -19,7 +21,7 @@
 
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" formControlName="email"
+              <input type="email" class="form-control" id="email" autocomplete="email" placeholder="vous@exemple.com" formControlName="email"
                 [class.is-invalid]="email?.invalid && email?.touched">
               <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
                 <div *ngIf="email?.errors?.['required']">L'email est requis</div>
@@ -29,7 +31,7 @@
 
             <div class="mb-3">
               <label for="phone" class="form-label">Numéro de téléphone</label>
-              <input type="tel" class="form-control" id="phone" formControlName="phone"
+              <input type="tel" class="form-control" id="phone" autocomplete="tel" formControlName="phone"
                 placeholder="+221771234567"
                 [class.is-invalid]="phone?.invalid && phone?.touched">
               <div class="invalid-feedback" *ngIf="phone?.invalid && phone?.touched">
@@ -40,7 +42,7 @@
 
             <div class="mb-3">
               <label for="password" class="form-label">Mot de passe</label>
-              <input type="password" class="form-control" id="password" formControlName="password"
+              <input type="password" class="form-control" id="password" autocomplete="new-password" formControlName="password"
                 [class.is-invalid]="password?.invalid && password?.touched">
               <div class="invalid-feedback" *ngIf="password?.invalid && password?.touched">
                 <div *ngIf="password?.errors?.['required']">Le mot de passe est requis</div>
@@ -50,7 +52,7 @@
 
             <div class="mb-3">
               <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
-              <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword"
+              <input type="password" class="form-control" id="confirmPassword" autocomplete="new-password" formControlName="confirmPassword"
                 [class.is-invalid]="(confirmPassword?.invalid && confirmPassword?.touched) || registerForm.errors?.['passwordMismatch']">
               <div class="invalid-feedback"
                 *ngIf="(confirmPassword?.invalid && confirmPassword?.touched) || registerForm.errors?.['passwordMismatch']">
@@ -84,3 +86,4 @@
     </div>
   </div>
 </div>
+</section>

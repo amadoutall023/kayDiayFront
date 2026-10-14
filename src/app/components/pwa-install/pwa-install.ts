@@ -34,16 +34,16 @@ type InstallPrompt = Event & {
   `,
   styles: `
     :host { display: block; }
-    .install-banner { display: flex; align-items: center; gap: .75rem; padding: 1rem; background: #fff; color: #344f1f; border-bottom: 1px solid #ddd; }
+    .install-banner { display: flex; align-items: center; gap: .75rem; padding: 1rem; background: #fff; color: var(--primary-green); border-bottom: 1px solid var(--line); }
     img { border-radius: 10px; flex-shrink: 0; }
     .install-copy { flex: 1; min-width: 0; }
     p { margin: .25rem 0 0; font-size: .875rem; }
     #install-help { margin-top: .75rem; line-height: 1.5; }
     button { min-height: 44px; border: 0; cursor: pointer; }
-    button:focus-visible { outline: 3px solid #f4991a; outline-offset: 3px; }
-    .install-action { padding: .6rem .9rem; border-radius: 8px; background: #344f1f; color: white; font-weight: 600; }
+    button:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+    .install-action { padding: .6rem .9rem; border-radius: 8px; background: var(--primary-green); color: white; font-weight: 600; }
     .install-action:disabled { opacity: .6; cursor: wait; }
-    .install-close { min-width: 44px; background: transparent; color: #344f1f; font-size: 1.5rem; }
+    .install-close { min-width: 44px; background: transparent; color: var(--primary-green); font-size: 1.5rem; }
     @media (max-width: 480px) {
       .install-banner { display: grid; grid-template-columns: 40px 1fr 44px; }
       .install-copy { grid-column: 2; }

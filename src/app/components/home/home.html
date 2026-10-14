@@ -7,10 +7,11 @@
           <span class="home-location-badge">
             <i class="fas fa-location-dot me-2" aria-hidden="true"></i>Dakar, Sénégal
           </span>
-          <h1 id="home-title" class="home-hero-title">Achetez &amp; Vendez<br />entre expatriés</h1>
+          <h1 id="home-title" class="home-hero-title">De belles trouvailles.<br /><em>Juste à côté.</em></h1>
           <p class="home-hero-subtitle">
-            KayDiay rassemble les bonnes annonces et les bons contacts pour la communauté internationale à Dakar.
+            Achetez, vendez et donnez une seconde vie à vos objets. Le marché qui rapproche la communauté locale et internationale à Dakar.
           </p>
+          <div class="home-hero-actions"><a href="#latest-listings" class="btn btn-primary">Explorer les annonces <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i></a><span><i class="fas fa-leaf me-2" aria-hidden="true"></i>Local. Simple. Ensemble.</span></div>
         </div>
         <div class="home-hero-media">
           <img
@@ -81,16 +82,16 @@
     <div class="container">
       <div class="home-stats-grid">
         <div class="home-stat">
-          <strong class="home-stat-number">1 000+</strong>
-          <span class="home-stat-label"><i class="fas fa-tag me-1" aria-hidden="true"></i>Annonces actives</span>
+          <strong class="home-stat-number"><i class="fas fa-location-dot" aria-hidden="true"></i> À Dakar</strong>
+          <span class="home-stat-label"><i class="fas fa-tag me-1" aria-hidden="true"></i>Des trouvailles près de chez vous</span>
         </div>
         <div class="home-stat">
-          <strong class="home-stat-number">{{ categories.length }}</strong>
-          <span class="home-stat-label"><i class="fas fa-layer-group me-1" aria-hidden="true"></i>Catégories</span>
+          <strong class="home-stat-number"><i class="fas fa-layer-group" aria-hidden="true"></i> À votre rythme</strong>
+          <span class="home-stat-label"><i class="fas fa-layer-group me-1" aria-hidden="true"></i>Trouvez ce qui vous ressemble</span>
         </div>
         <div class="home-stat">
-          <strong class="home-stat-number">500+</strong>
-          <span class="home-stat-label"><i class="fas fa-users me-1" aria-hidden="true"></i>Vendeurs actifs</span>
+          <strong class="home-stat-number"><i class="far fa-comments" aria-hidden="true"></i> En direct</strong>
+          <span class="home-stat-label"><i class="fas fa-users me-1" aria-hidden="true"></i>Échangez avec les vendeurs</span>
         </div>
       </div>
     </div>
@@ -104,15 +105,15 @@
           <h2 id="latest-listings-title" class="home-section-title">Dernières annonces</h2>
           <p class="home-section-intro">Les offres les plus récentes sur KayDiay</p>
         </div>
-        <button class="btn btn-outline-primary home-section-action" type="button" (click)="goToDashboard()">
-          <i class="fas fa-arrow-up-right-from-square me-2" aria-hidden="true"></i>Voir toutes
+        <button class="btn btn-outline-primary home-section-action" type="button" (click)="browseListings()">
+          <i class="fas fa-arrow-up-right-from-square me-2" aria-hidden="true"></i>Explorer
         </button>
       </div>
 
       @if (loading) {
         <div class="home-skeleton-grid" aria-hidden="true">
           @for (skeleton of skeletonCards; track skeleton; let index = $index) {
-            <div class="home-skeleton-card" [class.home-skeleton-card--lead]="index === 0">
+            <div class="home-skeleton-card" >
               <div class="home-skeleton-media"></div>
               <div class="home-skeleton-line home-skeleton-line--short"></div>
               <div class="home-skeleton-line"></div>
@@ -147,7 +148,7 @@
             @for (ad of ads.slice(0, 8); track ad.id; let index = $index) {
               <article
                 class="card home-ad-card"
-                [class.home-ad-card--lead]="index === 0"
+
                 tabindex="0"
                 role="button"
                 aria-haspopup="dialog"
@@ -374,7 +375,7 @@
         </div>
         <div class="home-conversion-secondary">
           <p>Vous cherchez encore ? Parcourez les annonces disponibles.</p>
-          <button class="btn btn-outline-light" type="button" (click)="goToDashboard()">
+          <button class="btn btn-outline-light" type="button" (click)="browseListings()">
             Explorer les annonces <i class="fas fa-arrow-right ms-2" aria-hidden="true"></i>
           </button>
         </div>

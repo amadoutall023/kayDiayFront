@@ -255,6 +255,10 @@ export class Home implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 
+  browseListings() {
+    document.querySelector('#latest-listings')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   goToDashboard() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     this.router.navigate(['/dashboard']);

@@ -206,25 +206,11 @@ import { UsersService } from '../../../services/users';
     </div>
   `,
   styles: [`
-    .profile-container {
-      padding: 20px;
-    }
-    .profile-header {
-      margin-bottom: 20px;
-    }
-    .badge.bg-success {
-      background-color: #28a745 !important;
-    }
-    .badge.bg-warning {
-      background-color: #ffc107 !important;
-      color: #000 !important;
-    }
-    .badge.bg-secondary {
-      background-color: #6c757d !important;
-    }
-    .badge.bg-danger {
-      background-color: #dc3545 !important;
-    }
+    .profile-header { margin-bottom: 24px; }
+    .profile-container .card-title { margin-bottom: 22px; }
+    .profile-container .card-body > .row p { padding: 12px 0; margin: 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+    .profile-container strong { color: var(--ink); font-weight: 600; margin-right: 10px; }
+    .profile-container .d-flex { flex-wrap: wrap; gap: 12px; }
   `]
 })
 export class Profile implements OnInit {

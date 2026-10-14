@@ -15,6 +15,12 @@ export interface Ad {
   status: string;
   verificationStatus: string;
   verificationReason?: string;
+  moderation?: {
+    decision: 'APPROVED' | 'REVIEW' | 'REJECTED';
+    risk_score: number | null;
+    categories: string[];
+    reason: string;
+  };
   publishedAt?: string;
   expiresAt?: string;
   categoryId: number;

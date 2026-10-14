@@ -1,0 +1,7 @@
+.card-header { padding: 26px 30px; }
+.card-header h3 { font-size: 1.35rem; }
+.card-body { padding: 30px; }
+form > .mb-3, form > .row { margin-bottom: 24px !important; }
+form > .mb-3:has(video), form > .mb-3:has(.fa-camera) { padding: 20px; border: 1px dashed #cbd9c6; border-radius: 12px; background: #f7f9f4; }
+.img-thumbnail { border-radius: 10px; border-color: var(--line); }
+@media (max-width: 767px) { .card-header, .card-body { padding: 20px; } }

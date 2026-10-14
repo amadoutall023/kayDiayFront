@@ -23,6 +23,15 @@ export class AdsService {
     return this.http.get<AdsResponse>(`${this.apiUrl}/ads`, { params });
   }
 
+  getManagedAds(page = 1, limit = 10, categoryId?: number, status = 'all'): Observable<AdsResponse> {
+    const params: any = { page, limit, status };
+    if (categoryId) params.categoryId = categoryId;
+    return this.http.get<AdsResponse>(`${this.apiUrl}/ads/manage`, {
+      params,
+      headers: this.authService.getAuthHeaders()
+    });
+  }
+
   getMyAds(page: number = 1, limit: number = 10, status?: string, categoryId?: number): Observable<AdsResponse> {
     const params: any = { page, limit };
     if (status) params.status = status;
@@ -35,7 +44,7 @@ export class AdsService {
   }
 
   getAdById(id: number): Observable<{ ad: Ad }> {
-    return this.http.get<{ ad: Ad }>(`${this.apiUrl}/ads/${id}`);
+    return this.http.get<{ ad: Ad }>(`${this.apiUrl}/ads/${id}`, { headers: this.authService.getAuthHeaders() });
   }
 
   createAd(adData: CreateAdRequest): Observable<{ ad: Ad }> {

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,7 +13,8 @@ import { Ad, Category, AdsResponse } from '../../../models/ad';
   templateUrl: './ad-list.html',
   styleUrl: './ad-list.css'
 })
-export class AdList implements OnInit {
+export class AdList implements OnInit, OnDestroy {
+  private adsRequest?: Subscription;
   ads: Ad[] = [];
   categories: Category[] = [];
   loading = false;
@@ -46,13 +48,14 @@ export class AdList implements OnInit {
   }
 
   loadAds() {
+    this.adsRequest?.unsubscribe();
     this.loading = true;
     this.error = '';
 
     const currentUser = this.authService.getCurrentUser();
     const isAdminView = currentUser?.role === 'admin' || currentUser?.role === 'moderator';
     const request$ = isAdminView
-      ? this.adsService.getAds(this.currentPage, 10, this.selectedCategoryId || undefined, this.selectedStatus)
+      ? this.adsService.getManagedAds(this.currentPage, 10, this.selectedCategoryId || undefined, this.selectedStatus)
       : this.adsService.getMyAds(
           this.currentPage,
           10,
@@ -60,7 +63,7 @@ export class AdList implements OnInit {
           this.selectedCategoryId || undefined
         );
 
-    request$.subscribe({
+    this.adsRequest = request$.subscribe({
       next: (response: AdsResponse) => {
         this.ads = response.ads;
         this.totalAds = response.pagination.total;
@@ -73,6 +76,10 @@ export class AdList implements OnInit {
         console.error('Erreur:', err);
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.adsRequest?.unsubscribe();
   }
 
   onCategoryChange() {
@@ -136,6 +143,10 @@ export class AdList implements OnInit {
   isAdOwner(ad: Ad): boolean {
     const currentUser = this.authService.getCurrentUser();
     return currentUser !== null && currentUser.id === ad.userId;
+  }
+
+  createAd() {
+    this.router.navigate(['/dashboard/ads/create']);
   }
 
   editAd(ad: Ad) {

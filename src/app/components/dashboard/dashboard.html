@@ -8,7 +8,7 @@
     <!-- Brand -->
     <div class="db-sidebar-brand">
       <a routerLink="/" class="db-brand-link">
-        <div class="db-brand-icon"><i class="fas fa-home"></i></div>
+        <div class="db-brand-icon"><i class="fas fa-leaf"></i></div>
         <span class="db-brand-name">kayDiay</span>
       </a>
     </div>
@@ -34,14 +34,14 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="db-nav">
+    <nav class="db-nav" aria-label="Navigation du tableau de bord">
 
       <!-- Section: Mon espace -->
       <div class="db-nav-section-label">Mon espace</div>
 
       <a class="db-nav-link"
          routerLink="/dashboard/ads"
-         routerLinkActive="db-nav-link--active">
+         routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
         <span class="db-nav-icon"><i class="fas fa-list-ul"></i></span>
         <span class="db-nav-text">Mes annonces</span>
         @if (userAdsCount > 0) {
@@ -51,14 +51,14 @@
 
       <a class="db-nav-link"
          routerLink="/dashboard/ads/create"
-         routerLinkActive="db-nav-link--active">
+         routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
         <span class="db-nav-icon"><i class="fas fa-plus-circle"></i></span>
         <span class="db-nav-text">Créer une annonce</span>
       </a>
 
       <a class="db-nav-link"
          routerLink="/dashboard/profile"
-         routerLinkActive="db-nav-link--active">
+         routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
         <span class="db-nav-icon"><i class="fas fa-user-circle"></i></span>
         <span class="db-nav-text">Mon profil</span>
       </a>
@@ -69,14 +69,14 @@
 
         <a class="db-nav-link"
            routerLink="/dashboard/categories"
-           routerLinkActive="db-nav-link--active">
+           routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <span class="db-nav-icon"><i class="fas fa-tags"></i></span>
           <span class="db-nav-text">Catégories</span>
         </a>
 
         <a class="db-nav-link"
            routerLink="/dashboard/verification"
-           routerLinkActive="db-nav-link--active">
+           routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <span class="db-nav-icon"><i class="fas fa-check-circle"></i></span>
           <span class="db-nav-text">Vérification</span>
           @if (pendingAdsCount > 0) {
@@ -86,14 +86,14 @@
 
         <a class="db-nav-link"
            routerLink="/dashboard/seller-requests"
-           routerLinkActive="db-nav-link--active">
+           routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <span class="db-nav-icon"><i class="fas fa-user-clock"></i></span>
           <span class="db-nav-text">Demandes vendeurs</span>
         </a>
 
         <a class="db-nav-link"
            routerLink="/dashboard/sellers"
-           routerLinkActive="db-nav-link--active">
+           routerLinkActive="db-nav-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <span class="db-nav-icon"><i class="fas fa-users"></i></span>
           <span class="db-nav-text">Liste vendeurs</span>
         </a>
@@ -149,32 +149,32 @@
 
     <div class="db-mobile-menu d-md-none">
       <div class="db-mobile-menu-scroll">
-        <a routerLink="/dashboard/ads" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+        <a routerLink="/dashboard/ads" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <i class="fas fa-list-ul"></i>
           <span>Mes annonces</span>
         </a>
-        <a routerLink="/dashboard/ads/create" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+        <a routerLink="/dashboard/ads/create" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <i class="fas fa-plus-circle"></i>
           <span>Créer</span>
         </a>
-        <a routerLink="/dashboard/profile" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+        <a routerLink="/dashboard/profile" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
           <i class="fas fa-user-circle"></i>
           <span>Profil</span>
         </a>
         @if (authService.getCurrentUser()?.role === 'admin') {
-          <a routerLink="/dashboard/categories" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <a routerLink="/dashboard/categories" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
             <i class="fas fa-tags"></i>
             <span>Catégories</span>
           </a>
-          <a routerLink="/dashboard/verification" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <a routerLink="/dashboard/verification" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
             <i class="fas fa-check-circle"></i>
             <span>Vérification</span>
           </a>
-          <a routerLink="/dashboard/seller-requests" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <a routerLink="/dashboard/seller-requests" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
             <i class="fas fa-user-clock"></i>
             <span>Demandes</span>
           </a>
-          <a routerLink="/dashboard/sellers" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active">
+          <a routerLink="/dashboard/sellers" class="db-mobile-menu-link" routerLinkActive="db-mobile-menu-link--active" [routerLinkActiveOptions]="{ exact: true }">
             <i class="fas fa-users"></i>
             <span>Vendeurs</span>
           </a>
@@ -182,6 +182,17 @@
       </div>
     </div>
 
+    <section class="db-overview" aria-label="Vue d’ensemble de vos annonces">
+      <div class="db-overview-heading"><div><span class="db-eyebrow">Votre espace KayDiay</span><h1>Bonjour, {{ authService.getCurrentUser()?.name }} <span aria-hidden="true">✦</span></h1><p>Tout ce dont vous avez besoin pour gérer votre activité.</p></div><span class="db-overview-tag"><i class="fas fa-location-dot me-2" aria-hidden="true"></i>Dakar, Sénégal</span></div>
+      @if (statsError) {
+        <div class="alert alert-info" role="status">Les statistiques sont momentanément indisponibles. <button type="button" class="btn btn-sm btn-outline-primary ms-2" (click)="loadUserStats()">Réessayer</button></div>
+      }
+      <div class="db-metrics" [attr.aria-busy]="statsLoading">
+        <article class="db-metric"><i class="fas fa-layer-group" aria-hidden="true"></i><span class="db-metric-label">Mes annonces</span><strong>{{ statsLoading || statsError ? '—' : userAdsCount }}</strong><small>Votre catalogue en un coup d’œil</small></article>
+        <article class="db-metric"><i class="fas fa-arrow-trend-up" aria-hidden="true"></i><span class="db-metric-label">Annonces actives</span><strong>{{ statsLoading || statsError ? '—' : activeAdsCount }}</strong><small>Visibles par les acheteurs</small></article>
+        <article class="db-metric"><i class="far fa-clock" aria-hidden="true"></i><span class="db-metric-label">En attente</span><strong>{{ statsLoading || statsError ? '—' : pendingAdsCount }}</strong><small>En cours de vérification</small></article>
+      </div>
+    </section>
     <!-- Page content -->
     <div class="db-content">
       <router-outlet></router-outlet>
@@ -193,20 +204,20 @@
 
 <!-- Mobile bottom navigation -->
 <nav class="db-mobile-nav d-md-none">
-  <a routerLink="/dashboard/ads" class="db-mobile-nav-item" routerLinkActive="active">
+  <a routerLink="/dashboard/ads" class="db-mobile-nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <i class="fas fa-list-ul"></i>
     <span>Annonces</span>
   </a>
-  <a routerLink="/dashboard/ads/create" class="db-mobile-nav-item" routerLinkActive="active">
+  <a routerLink="/dashboard/ads/create" class="db-mobile-nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <i class="fas fa-plus-circle"></i>
     <span>Créer</span>
   </a>
-  <a routerLink="/dashboard/profile" class="db-mobile-nav-item" routerLinkActive="active">
+  <a routerLink="/dashboard/profile" class="db-mobile-nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <i class="fas fa-user-circle"></i>
     <span>Profil</span>
   </a>
   @if (authService.getCurrentUser()?.role === 'admin') {
-    <a routerLink="/dashboard/verification" class="db-mobile-nav-item" routerLinkActive="active">
+    <a routerLink="/dashboard/verification" class="db-mobile-nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       <i class="fas fa-check-circle"></i>
       <span>Vérif.</span>
     </a>

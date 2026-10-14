@@ -1,9 +1,11 @@
-<div class="container mt-5">
+<section class="auth-layout container">
+  <aside class="auth-story"><span class="auth-kicker"><i class="fas fa-leaf me-2" aria-hidden="true"></i>Le marché de votre communauté</span><h1>Les bonnes choses<br>se partagent.</h1><p>Un meuble qui trouve sa place. Un vélo qui reprend la route. Un nouveau départ à Dakar.</p><div class="auth-story-photo" role="img" aria-label="Objets et trouvailles sur un marché"></div><div class="auth-story-caption"><span>Dakar, Sénégal</span><span>Une communauté. Mille possibilités.</span></div></aside>
+  <div class="auth-form-panel">
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-12">
       <div class="card">
         <div class="card-header text-center">
-          <h3>Connexion</h3>
+          <span class="auth-kicker">Bienvenue chez vous</span><h2>Heureux de vous retrouver.</h2><p>Connectez-vous pour retrouver vos annonces et votre communauté.</p>
         </div>
         <div class="card-body">
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -12,7 +14,7 @@
               <input
                 type="email"
                 class="form-control"
-                id="email"
+                id="email" autocomplete="email" placeholder="vous@exemple.com"
                 formControlName="email"
                 [class.is-invalid]="email?.invalid && email?.touched">
               <div class="invalid-feedback" *ngIf="email?.invalid && email?.touched">
@@ -26,7 +28,7 @@
               <input
                 type="password"
                 class="form-control"
-                id="password"
+                id="password" autocomplete="current-password"
                 formControlName="password"
                 [class.is-invalid]="password?.invalid && password?.touched">
               <div class="invalid-feedback" *ngIf="password?.invalid && password?.touched">
@@ -55,3 +57,4 @@
     </div>
   </div>
 </div>
+</section>

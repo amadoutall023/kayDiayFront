@@ -3,7 +3,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/rou
 import { AuthService } from '../../services/auth';
 import { AdsService } from '../../services/ads';
 import { CommonModule } from '@angular/common';
-import { Ad } from '../../models/ad';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +12,8 @@ import { Ad } from '../../models/ad';
   styleUrls: ['./dashboard.css']
 })
 export class Dashboard implements OnInit {
+  statsLoading = true;
+  statsError = false;
   userAdsCount = 0;
   activeAdsCount = 0;
   pendingAdsCount = 0;
@@ -27,14 +29,22 @@ export class Dashboard implements OnInit {
   }
 
   loadUserStats() {
-    this.adsService.getMyAds(1, 100).subscribe({
+    this.statsLoading = true;
+    this.statsError = false;
+    forkJoin({
+      all: this.adsService.getMyAds(1, 1),
+      active: this.adsService.getMyAds(1, 1, 'active'),
+      pending: this.adsService.getMyAds(1, 1, 'pending_verification')
+    }).subscribe({
       next: (response) => {
-        const ads = response.ads;
-        this.userAdsCount = ads.length;
-        this.activeAdsCount = ads.filter((ad: Ad) => ad.status === 'active').length;
-        this.pendingAdsCount = ads.filter((ad: Ad) => ad.status === 'pending_verification').length;
+        this.statsLoading = false;
+        this.userAdsCount = response.all.pagination.total;
+        this.activeAdsCount = response.active.pagination.total;
+        this.pendingAdsCount = response.pending.pagination.total;
       },
       error: (err) => {
+        this.statsLoading = false;
+        this.statsError = true;
         console.error('Erreur lors du chargement des statistiques:', err);
         this.userAdsCount = 0;
         this.activeAdsCount = 0;
