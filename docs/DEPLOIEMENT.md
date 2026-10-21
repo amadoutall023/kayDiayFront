@@ -1140,3 +1140,34 @@ npm run build
 ~~~
 
 Après réussite, recharger le site. Fermer puis rouvrir les onglets du site si le service worker affiche encore l'ancienne version.
+
+
+## 32. Mise à jour : affichage des photos et du détail sur mobile
+
+Modification préparée sur le Mac dans frontend/src/app/components/home/home.css :
+
+- Photos entières et centrées dans les cartes publiques et dans le détail.
+- Miniatures affichées sans recadrage.
+- Titre clair sur le fond vert, avec retour à la ligne pour les titres longs.
+- Hauteur de galerie adaptée à la hauteur de l'écran mobile.
+- Bouton WhatsApp sur toute la largeur sur mobile.
+
+Compilation de production validée. L'affichage réel sur téléphone reste à confirmer après transfert. Cette modification ne nécessite pas de changement du backend ou de Nginx.
+
+### Onglet B — Mac
+
+~~~bash
+cd /Users/mac/Downloads/fotoljaayback--main
+
+scp frontend/src/app/components/home/home.css \
+  root@145.223.33.207:/opt/kaydiay/frontend/src/app/components/home/
+~~~
+
+### Onglet A — Serveur
+
+~~~bash
+cd /opt/kaydiay/frontend
+npm run build
+~~~
+
+Après réussite, fermer les onglets du site et le rouvrir si l'ancienne version reste affichée.
