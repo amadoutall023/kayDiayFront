@@ -1207,3 +1207,41 @@ Après réussite, ouvrir https://145.223.33.207:8085/explorer. Vérifier le déf
 cd /Users/mac/Downloads/fotoljaayback--main/frontend
 ./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadless --include=src/app/components/explore/explore.spec.ts --ts-config=tsconfig.explore-test.json
 ~~~
+
+
+## 34. Mise à jour : stabiliser la largeur sur mobile
+
+Correction préparée sur le Mac pour limiter la page à la largeur de l'écran :
+
+- Conteneurs principaux autorisés à rétrécir, sans débordement horizontal du document.
+- Menu compact jusqu'à 991 pixels pour éviter le débordement sur tablette.
+- Colonnes de pied de page et contenus longs adaptables à la largeur disponible.
+- Catégories toujours défilantes horizontalement dans leur propre ligne.
+- Champs de formulaire à 16 pixels sur mobile pour éviter le zoom automatique d'iPhone à la saisie ; le zoom manuel du navigateur reste disponible.
+
+Compilation de production réussie. Six tests de mise en page ChromeHeadless passent sur l'accueil et Explorer à 320, 390 et 768 pixels, avec catégories et titres longs. Ces tests ne remplacent pas une vérification finale sur un vrai iPhone.
+
+### Onglet B — Mac
+
+Une archive des quatre fichiers CSS a été préparée :
+
+~~~bash
+scp /tmp/kaydiay-mobile-layout-20261021.tar.gz root@145.223.33.207:/root/
+~~~
+
+### Onglet A — Serveur
+
+~~~bash
+tar -xzf /root/kaydiay-mobile-layout-20261021.tar.gz -C /opt/kaydiay/frontend
+cd /opt/kaydiay/frontend
+npm run build
+~~~
+
+Après réussite, fermer et rouvrir le site sur le téléphone. Vérifier que la page ne se décale pas latéralement, que la ligne des catégories reste défilante et que la recherche reste utilisable.
+
+### Tests locaux
+
+~~~bash
+cd /Users/mac/Downloads/fotoljaayback--main/frontend
+./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadless --include=src/app/responsive.spec.ts --ts-config=tsconfig.responsive-test.json
+~~~

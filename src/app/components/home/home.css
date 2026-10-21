@@ -419,7 +419,9 @@
   background: var(--home-ochre);
   font-size: 0.82rem;
   font-weight: 800;
-  white-space: nowrap;
+  max-width: calc(100% - 1.5rem);
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .home-ad-body {
@@ -438,7 +440,10 @@
 }
 
 .home-category-badge {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
   padding: 0.3rem 0.55rem;
   border-radius: 999px;
   color: var(--home-forest);
@@ -1227,7 +1232,9 @@
 /* Shared KayDiay visual identity */
 .kaydiay-home { --home-ink: #203b2c; --home-muted: #82907c; --home-line: #e2e8dd; --home-surface-soft: #eef2e8; background: #f6f7f2; }
 .home-hero-shell { padding: 42px 0 34px; background: #f6f7f2; }
-.home-hero-grid { min-height: 430px; grid-template-columns: 1.1fr 1fr; gap: 30px; align-items: stretch; }
+.home-hero-grid { min-height: 430px; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 30px; align-items: stretch; }
+.home-hero-grid > *, .home-search-counter > *, .home-section-heading > * { min-width: 0; }
+.home-ad-title, .home-category-badge { overflow-wrap: anywhere; }
 .home-hero-copy { padding: 38px 28px 38px 0; color: #27442e; background: transparent; border: 0; }
 .home-location-badge { background: #eaf0e2; border: 1px solid #dde7d1; color: #728565; font-size: .64rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
 .home-hero-title { max-width: none; font-size: clamp(2.6rem, 4.3vw, 4.2rem); color: #25452f; line-height: 1.12; letter-spacing: -.055em; font-weight: 650; margin: 24px 0 20px; }
