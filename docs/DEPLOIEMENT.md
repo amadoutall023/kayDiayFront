@@ -1171,3 +1171,39 @@ npm run build
 ~~~
 
 Après réussite, fermer les onglets du site et le rouvrir si l'ancienne version reste affichée.
+
+
+## 33. Mise à jour : page publique Explorer
+
+Nouvelle page /explorer avec recherche, catégories sur une ligne défilante et accès à toutes les annonces actives. Les boutons Explorer de l'accueil, du menu et du pied de page ouvrent cette page. Les filtres sont conservés dans l'URL. La recherche porte sur le titre, la description, le lieu et la catégorie et ignore les accents.
+
+Les pages de l'API sont toutes parcourues au chargement, puis la recherche et les catégories filtrent les annonces en mémoire. Cette solution utilise le backend existant. Pour un catalogue beaucoup plus grand, prévoir une recherche paginée côté serveur.
+
+Le bouton « Voir plus d'annonces » affiche les résultats suivants. Une carte ouvre /ads/:id ; le détail charge directement l'annonce par son identifiant, sans dépendre des cent premières annonces.
+
+Compilation de production et sept tests ChromeHeadless validés sur le Mac. Le déploiement de cette mise à jour n'a pas encore été confirmé.
+
+### Onglet B — Mac
+
+L'archive de mise à jour a été préparée dans /tmp/kaydiay-explorer-update-20261021.tar.gz, sans secrets ni dépendances. Elle inclut également le CSS mobile corrigé lors de la mise à jour précédente.
+
+~~~bash
+scp /tmp/kaydiay-explorer-update-20261021.tar.gz root@145.223.33.207:/root/
+~~~
+
+### Onglet A — Serveur, après la fin du transfert
+
+~~~bash
+tar -xzf /root/kaydiay-explorer-update-20261021.tar.gz -C /opt/kaydiay/frontend
+cd /opt/kaydiay/frontend
+npm run build
+~~~
+
+Après réussite, ouvrir https://145.223.33.207:8085/explorer. Vérifier le défilement des catégories, la recherche, le bouton Voir plus et l'ouverture d'une annonce. Fermer et rouvrir le site si l'ancienne version reste affichée.
+
+### Relancer les tests sur le Mac
+
+~~~bash
+cd /Users/mac/Downloads/fotoljaayback--main/frontend
+./node_modules/.bin/ng test --watch=false --browsers=ChromeHeadless --include=src/app/components/explore/explore.spec.ts --ts-config=tsconfig.explore-test.json
+~~~

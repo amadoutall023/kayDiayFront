@@ -9,7 +9,7 @@
         <div #siteMenu id="site-menu" class="site-menu" [class.site-menu--open]="menuOpen">
           <div class="site-links">
             <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Accueil</a>
-            <a routerLink="/" fragment="latest-listings">Explorer les annonces</a>
+            <a routerLink="/explorer" routerLinkActive="is-active">Explorer les annonces</a>
             <a routerLink="/" fragment="how-it-works-title">Comment ça marche</a>
           </div>
           <div class="site-actions">
@@ -34,7 +34,7 @@
       <div class="container">
         <div class="footer-grid">
           <div class="footer-about"><a class="site-brand" routerLink="/">kay<span>Diay</span><span class="brand-period">.</span></a><p>De belles trouvailles. De nouvelles rencontres.<br>Votre marché de proximité à Dakar.</p><span class="footer-location"><i class="fas fa-location-dot me-2" aria-hidden="true"></i>Fait pour la communauté au Sénégal</span></div>
-          <div><h2>Découvrir</h2><a routerLink="/">Accueil</a><a routerLink="/" fragment="latest-listings">Les annonces</a><a routerLink="/" fragment="how-it-works-title">Comment ça marche</a></div>
+          <div><h2>Découvrir</h2><a routerLink="/">Accueil</a><a routerLink="/explorer">Les annonces</a><a routerLink="/" fragment="how-it-works-title">Comment ça marche</a></div>
           <div><h2>Votre espace</h2><a routerLink="/dashboard/ads/create">Publier une annonce</a><a routerLink="/dashboard/ads">Gérer mes annonces</a><a routerLink="/dashboard/profile">Mon compte</a></div>
           <div class="footer-contact"><h2>Restons en contact</h2><a href="mailto:Elhadjiamadoutall85@gmail.com">Elhadjiamadoutall85&#64;gmail.com</a><a href="tel:+221784541151">+221 78 454 11 51</a><span>Zac Mbao, Sénégal</span></div>
         </div>

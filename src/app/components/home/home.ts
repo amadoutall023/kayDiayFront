@@ -256,7 +256,8 @@ export class Home implements OnInit, OnDestroy {
   }
 
   browseListings() {
-    document.querySelector('#latest-listings')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    this.router.navigate(['/explorer']);
+    window.scrollTo({ top: 0 });
   }
 
   goToDashboard() {

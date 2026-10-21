@@ -33,16 +33,9 @@ export class AdDetail implements OnInit {
     this.loading = true;
     this.error = '';
 
-    // For now, we'll get ads and find the specific one
-    // In a real app, you'd have a getAdById method
-    this.adsService.getAds(1, 100).subscribe({
+    this.adsService.getAdById(parseInt(adId, 10)).subscribe({
       next: (response) => {
-        const foundAd = response.ads.find(ad => ad.id === parseInt(adId));
-        if (foundAd) {
-          this.ad = foundAd;
-        } else {
-          this.error = 'Annonce non trouvée';
-        }
+        this.ad = response.ad;
         this.loading = false;
       },
       error: (err) => {
@@ -114,6 +107,6 @@ export class AdDetail implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/explorer']);
   }
 }

@@ -18,6 +18,7 @@ export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
+  { path: 'explorer', loadComponent: () => import('./components/explore/explore').then(module => module.Explore) },
   { path: 'ads/:id', component: AdDetail },
   {
     path: 'dashboard',

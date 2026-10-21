@@ -1,0 +1,91 @@
+<div class="explore-page">
+  <div class="container">
+    <header class="explore-header">
+      <a class="explore-back" routerLink="/"><i class="fas fa-arrow-left" aria-hidden="true"></i> Accueil</a>
+      <p class="explore-kicker">Le marché de proximité</p>
+      <h1>Explorer les annonces</h1>
+      <p>Trouvez votre prochaine belle trouvaille, à Dakar et partout au Sénégal.</p>
+    </header>
+
+    <section class="explore-filters" aria-label="Rechercher et filtrer les annonces">
+      <form role="search" aria-label="Rechercher une annonce" (ngSubmit)="updateFilters()">
+        <label class="visually-hidden" for="explore-search">Rechercher une annonce</label>
+        <div class="explore-search">
+          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="explore-search" name="search" type="search" placeholder="Un téléphone, un vélo, un quartier..."
+            autocomplete="off" [(ngModel)]="searchQuery" (ngModelChange)="updateFilters()" aria-controls="explore-results">
+          @if (searchQuery) {
+            <button class="explore-clear" type="button" aria-label="Effacer la recherche" (click)="searchQuery = ''; updateFilters()">
+              <i class="fas fa-xmark" aria-hidden="true"></i>
+            </button>
+          }
+          <button class="btn btn-primary" type="submit" aria-label="Rechercher"><i class="fas fa-search" aria-hidden="true"></i><span>Rechercher</span></button>
+        </div>
+      </form>
+      <p id="category-scroll-help" class="explore-category-hint">Choisissez une catégorie · Faites défiler pour toutes les voir</p>
+      <div class="explore-categories" role="group" aria-label="Catégories d’annonces" aria-describedby="category-scroll-help" tabindex="0">
+        <button type="button" class="explore-category" [class.is-selected]="selectedCategoryId === null"
+          [attr.aria-pressed]="selectedCategoryId === null" (click)="selectCategory(null)">
+          <i class="fas fa-border-all" aria-hidden="true"></i> Toutes les annonces
+        </button>
+        @for (category of categories; track category.id) {
+          <button type="button" class="explore-category" [class.is-selected]="selectedCategoryId === category.id"
+            [attr.aria-pressed]="selectedCategoryId === category.id" (click)="selectCategory(category.id)">{{ category.name }}</button>
+        }
+      </div>
+      @if (categoryError) {
+        <div class="explore-category-error" role="status">{{ categoryError }} <button type="button" (click)="loadCategories()">Réessayer</button></div>
+      }
+    </section>
+
+    <section id="explore-results" aria-labelledby="explore-results-title" [attr.aria-busy]="loading">
+      <div class="explore-results-heading">
+        <h2 id="explore-results-title">{{ selectedCategoryId === null ? 'Toutes les annonces' : 'Annonces de la catégorie' }}</h2>
+        @if (!loading && !error) {
+          <p role="status">{{ filteredAds.length }} annonce{{ filteredAds.length > 1 ? 's' : '' }} trouvée{{ filteredAds.length > 1 ? 's' : '' }}</p>
+        }
+      </div>
+      @if (loading) {
+        <div class="explore-state" role="status"><span class="spinner-border text-primary" aria-hidden="true"></span><p>Chargement des annonces...</p></div>
+      } @else if (error) {
+        <div class="explore-state" role="alert"><p>{{ error }}</p><button class="btn btn-primary" type="button" (click)="loadAds()">Réessayer</button></div>
+      } @else if (!filteredAds.length) {
+        <div class="explore-state">
+          <i class="fas fa-magnifying-glass explore-empty-icon" aria-hidden="true"></i>
+          <h3>{{ searchQuery || selectedCategoryId ? 'Aucune annonce ne correspond' : 'Les prochaines trouvailles arrivent bientôt' }}</h3>
+          <p>{{ searchQuery || selectedCategoryId ? 'Essayez un autre mot-clé ou une autre catégorie.' : 'Revenez bientôt pour découvrir les nouvelles annonces.' }}</p>
+          @if (searchQuery || selectedCategoryId) {
+            <button class="btn btn-primary" type="button" (click)="resetFilters()">Afficher toutes les annonces</button>
+          }
+        </div>
+      } @else {
+        <div class="explore-grid">
+          @for (ad of filteredAds.slice(0, visibleCount); track ad.id) {
+            <a class="explore-card" [routerLink]="['/ads', ad.id]" [attr.aria-label]="'Voir l’annonce ' + ad.title">
+              <div class="explore-image">
+                @if (ad.images.length) {
+                  <img [src]="ad.images[0]" [alt]="ad.title" loading="lazy" (error)="photo.hidden = true" #photo>
+                } @else {
+                  <i class="far fa-image" aria-label="Photo indisponible"></i>
+                }
+                <span class="explore-price">{{ formatPrice(ad.price) }}</span>
+              </div>
+              <div class="explore-card-body">
+                <span class="explore-card-category">{{ ad.category.name }}</span>
+                <h3>{{ ad.title }}</h3>
+                <p class="explore-description">{{ ad.description }}</p>
+                <div class="explore-card-footer">
+                  @if (ad.address) { <span class="explore-address"><i class="fas fa-location-dot" aria-hidden="true"></i>{{ ad.address }}</span> }
+                  <span class="explore-available">Disponible</span>
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+        @if (visibleCount < filteredAds.length) {
+          <div class="explore-more"><button class="btn btn-outline-primary" type="button" (click)="showMore()">Voir plus d’annonces <i class="fas fa-arrow-down ms-2" aria-hidden="true"></i></button></div>
+        }
+      }
+    </section>
+  </div>
+</div>
