@@ -45,9 +45,9 @@
 <div *ngIf="!loading && !error" class="row">
   <div *ngFor="let ad of ads" class="col-md-6 col-lg-4 mb-4">
     <div class="card h-100 ad-card">
-      <div class="card-img-top" style="height: 200px; overflow: hidden;">
+      <div class="card-img-top bg-light" style="height: 200px; overflow: hidden;">
         <img *ngIf="ad.images && ad.images.length > 0" [src]="ad.images[0]" [alt]="ad.title"
-          class="w-100 h-100 object-fit-cover">
+          class="w-100 h-100 object-fit-contain">
         <div *ngIf="!ad.images || ad.images.length === 0"
           class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
           <i class="fas fa-image fa-3x text-muted"></i>

@@ -105,21 +105,44 @@
             </div>
           </div>
 
-          <!-- Camera Capture -->
+          <!-- Photos from files or camera -->
           <div class="mb-3">
             <label class="form-label">Photos (obligatoire - maximum {{ maxImages }})</label>
 
-            <!-- Camera Button -->
-            <div class="mb-3">
+            <p id="photo-help" class="text-muted small">
+              Choisissez des photos depuis votre appareil ou prenez une photo.
+              JPG, PNG ou WebP, 10 Mo maximum par fichier. {{ capturedImages.length }}/{{ maxImages }} photos ajoutées.
+            </p>
+            <input
+              #photoInput
+              type="file"
+              class="d-none"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              aria-label="Choisir des photos"
+              aria-describedby="photo-help"
+              [disabled]="loading || uploadingImage || isCapturing || capturedImages.length >= maxImages"
+              (change)="onFileSelected($event)">
+            <div class="d-flex flex-wrap gap-2 mb-3">
               <button
                 type="button"
                 class="btn btn-primary"
+                (click)="photoInput.click()"
+                [disabled]="loading || uploadingImage || isCapturing || capturedImages.length >= maxImages">
+                <i class="fas fa-images me-2" aria-hidden="true"></i>
+                {{ uploadingImage ? 'Préparation des photos...' : 'Ajouter des photos' }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
                 (click)="startCamera()"
-                [disabled]="isCapturing || capturedImages.length >= maxImages">
+                [disabled]="loading || uploadingImage || isCapturing || capturedImages.length >= maxImages">
                 <i class="fas fa-camera me-2"></i>
-                Prendre une photo ({{ capturedImages.length }}/{{ maxImages }})
+                Prendre une photo
               </button>
             </div>
+            <div *ngIf="photoError" class="alert alert-warning" role="alert">{{ photoError }}</div>
+            <div *ngIf="uploadingImage" class="text-muted small" role="status">Préparation des photos en cours...</div>
 
             <!-- Camera Interface -->
             <div *ngIf="isCapturing" class="mb-3">
@@ -146,7 +169,7 @@
 
             <!-- Captured Images Preview -->
             <div *ngIf="capturedImages.length > 0" class="mt-3">
-              <h6>Photos capturées:</h6>
+              <h6>Photos de l'annonce :</h6>
               <div class="row">
                 <div *ngFor="let image of capturedImages; let i = index" class="col-md-3 mb-3">
                   <div class="position-relative">
@@ -154,6 +177,8 @@
                     <button
                       type="button"
                       class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                      [disabled]="loading || uploadingImage"
+                      [attr.aria-label]="'Supprimer la photo ' + (i + 1)"
                       (click)="removeCapturedImage(i)">
                       <i class="fas fa-times"></i>
                     </button>
@@ -183,7 +208,7 @@
             <button
               type="submit"
               class="btn btn-primary"
-              [disabled]="loading || capturedImages.length === 0">
+              [disabled]="loading || uploadingImage || capturedImages.length === 0">
               <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
               {{ loading ? (isEditMode ? 'Modification...' : 'Création...') : (isEditMode ? 'Modifier l\'annonce' : 'Créer l\'annonce') }}
             </button>

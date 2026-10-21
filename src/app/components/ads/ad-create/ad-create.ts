@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AdsService } from '../../../services/ads';
 import { Category, Ad } from '../../../models/ad';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-ad-create',
@@ -11,7 +12,7 @@ import { Category, Ad } from '../../../models/ad';
   templateUrl: './ad-create.html',
   styleUrl: './ad-create.css'
 })
-export class AdCreate implements OnInit {
+export class AdCreate implements OnInit, OnDestroy {
   adForm: FormGroup;
   categories: Category[] = [];
   loading = false;
@@ -22,9 +23,9 @@ export class AdCreate implements OnInit {
   capturedImages: string[] = [];
   isCapturing = false;
   maxImages = 4;
-  selectedFile: File | null = null;
-  imagePreview: string | null = null;
   uploadingImage = false;
+  photoError = '';
+  private cameraStream: MediaStream | null = null;
 
   // Edit mode
   isEditMode = false;
@@ -49,6 +50,10 @@ export class AdCreate implements OnInit {
   ngOnInit() {
     this.loadCategories();
     this.checkEditMode();
+  }
+
+  ngOnDestroy() {
+    this.stopCamera();
   }
 
   checkEditMode() {
@@ -100,50 +105,89 @@ export class AdCreate implements OnInit {
     });
   }
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = Array.from(input.files || []);
+    input.value = '';
+    if (!files.length || this.loading || this.uploadingImage || this.isCapturing) return;
 
-      // Preview image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imagePreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
+    this.photoError = '';
+    this.uploadingImage = true;
+    const messages: string[] = [];
+
+    try {
+      for (const file of files) {
+        if (this.capturedImages.length >= this.maxImages) {
+          messages.push(`Vous pouvez ajouter au maximum ${this.maxImages} photos.`);
+          break;
+        }
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+          messages.push(`${file.name} : choisissez une image JPG, PNG ou WebP.`);
+          continue;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          messages.push(`${file.name} : la taille maximale est de 10 Mo.`);
+          continue;
+        }
+        try {
+          this.capturedImages.push(await this.preparePhoto(file));
+        } catch {
+          messages.push(`${file.name} : impossible de lire cette photo. Essayez une autre image.`);
+        }
+      }
+    } finally {
+      this.photoError = messages.join(' ');
+      this.uploadingImage = false;
     }
   }
 
-  uploadImage(): Promise<string> {
+  private preparePhoto(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (!this.selectedFile) {
-        resolve('');
-        return;
-      }
-
-      this.uploadingImage = true;
-      const formData = new FormData();
-      formData.append('photo', this.selectedFile);
-
-      this.adsService.uploadPhoto(formData).subscribe({
-        next: (response) => {
-          this.uploadingImage = false;
-          resolve(response.url);
-        },
-        error: (err) => {
-          this.uploadingImage = false;
-          reject(err);
+      const image = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      image.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error('Image illisible'));
+      };
+      image.onload = () => {
+        try {
+          const scale = Math.min(1, 1920 / Math.max(image.naturalWidth, image.naturalHeight));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+          canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+          const context = canvas.getContext('2d');
+          if (!context) throw new Error('Préparation de la photo indisponible');
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+          const result = canvas.toDataURL('image/jpeg', 0.85);
+          if (!result.startsWith('data:image/jpeg;base64,') || result.length * 0.75 > 3 * 1024 * 1024) {
+            throw new Error('Photo trop volumineuse');
+          }
+          resolve(result);
+        } catch (error) {
+          reject(error);
+        } finally {
+          URL.revokeObjectURL(objectUrl);
         }
-      });
+      };
+      image.src = objectUrl;
     });
   }
 
   async startCamera() {
+    if (this.loading || this.uploadingImage || this.isCapturing || this.capturedImages.length >= this.maxImages) return;
     try {
       this.isCapturing = true;
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' } // Use back camera on mobile
       });
+
+      if (!this.isCapturing) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      this.cameraStream = stream;
 
       const videoElement = document.querySelector('video') as HTMLVideoElement;
       if (videoElement) {
@@ -157,11 +201,12 @@ export class AdCreate implements OnInit {
   }
 
   captureImage() {
+    if (this.loading || this.uploadingImage || this.capturedImages.length >= this.maxImages) return;
     const videoElement = document.querySelector('video') as HTMLVideoElement;
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
 
-    if (videoElement && context) {
+    if (videoElement && context && videoElement.videoWidth > 0 && videoElement.videoHeight > 0) {
       canvas.width = videoElement.videoWidth;
       canvas.height = videoElement.videoHeight;
       context.drawImage(videoElement, 0, 0);
@@ -177,6 +222,8 @@ export class AdCreate implements OnInit {
 
   stopCamera() {
     this.isCapturing = false;
+    this.cameraStream?.getTracks().forEach(track => track.stop());
+    this.cameraStream = null;
     const videoElement = document.querySelector('video') as HTMLVideoElement;
     if (videoElement && videoElement.srcObject) {
       const stream = videoElement.srcObject as MediaStream;
@@ -186,11 +233,15 @@ export class AdCreate implements OnInit {
   }
 
   removeCapturedImage(index: number) {
+    if (this.loading || this.uploadingImage) return;
     this.capturedImages.splice(index, 1);
+    this.photoError = '';
   }
 
   async onSubmit() {
+    if (this.loading || this.uploadingImage) return;
     if (this.adForm.valid && this.capturedImages.length > 0) {
+      this.stopCamera();
       this.loading = true;
       this.error = '';
       this.success = '';
@@ -213,10 +264,9 @@ export class AdCreate implements OnInit {
             const formData = new FormData();
             formData.append('photo', file);
 
-            const uploadResult = await this.adsService.uploadPhoto(formData).toPromise();
-            if (uploadResult && uploadResult.url) {
-              uploadedImageUrls.push(uploadResult.url);
-            }
+            const uploadResult = await firstValueFrom(this.adsService.uploadPhoto(formData));
+            if (!uploadResult.url) throw new Error('Photo non transférée');
+            uploadedImageUrls.push(uploadResult.url);
           }
         }
 
@@ -271,7 +321,7 @@ export class AdCreate implements OnInit {
       }
     } else {
       if (this.capturedImages.length === 0) {
-        this.error = 'Veuillez prendre au moins une photo';
+        this.error = 'Veuillez ajouter ou prendre au moins une photo';
       }
       this.markFormGroupTouched();
     }
@@ -288,11 +338,6 @@ export class AdCreate implements OnInit {
       const control = this.adForm.get(key);
       control?.markAsTouched();
     });
-  }
-
-  removeImage() {
-    this.selectedFile = null;
-    this.imagePreview = null;
   }
 
   get title() { return this.adForm.get('title'); }
